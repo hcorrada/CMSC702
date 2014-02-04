@@ -30,6 +30,18 @@ names(arrest_tab)
 
 # what is the average arrest age?
 mean(arrest_tab$age)
+
+# the range of arrest ages
+range(arrest_tab$age)
+
+# how many arrests per sex
+table(arrest_tab$sex)
+
+# what are the most common offenses
+head(sort(table(arrest_tab$incidentOffense),decreasing=TRUE))
+
+# range of arrests after removing those w/ age==0
+range(arrest_tab$age[arrest_tab$age>0])
 ```
 
 Let's see a table of arrests by sex and race
@@ -41,9 +53,12 @@ A histogram of age
 
 ```{r}
 hist(arrest_tab$age,nc=100)
+with(arrest_tab,hist(age[sex=="M"],nc=100)) # males only
+with(arrest_tab,hist(age[sex=="F"],nc=100)) # females only
+
 ```
 
-### Are males and females arrested at different ages?
+### Are males and females arrested at different ages on average?
 
 Let's take a look at how age depends on sex. Let's plot age as a function of sex first (notice how we indicate that sex is a `factor`). 
 
@@ -138,4 +153,20 @@ m=match(names(cctvTab),names(arrestTab))
 plot(arrestTab[m]~factor(cctvTab))
 ```
 
+
+### Extra analyses
+
+As part of HW1 you will add to this analysis. Please use the following template:
+
+#### Your name(s) here
+
+What question are you asking?:
+
+What is the code you use to answer it?:
+
+```{r}
+# code goes here
+```
+
+What did you observe?
 
