@@ -153,6 +153,27 @@ m=match(names(cctvTab),names(arrestTab))
 plot(arrestTab[m]~factor(cctvTab))
 ```
 
+#### Patricia Sazama
+
+Is there a relationship between the age of the arrested individual and the time they are arrested?
+
+```{r}
+#change the time format from hh:mm to hh.mm so it can be converted to a numeric value
+tmp=gsub(":",".",arrest_tab$arrestTime)
+
+#convert the arrestTime to numeric
+arrestTime=as.numeric(tmp)
+
+#group ages into 5 buckets
+ages = arrest_tab$age
+ages = cut(ages, 5)
+
+#plot the age buckets as a factor of the numeric arrest times
+plot(arrestTime~factor(ages))
+```
+From these plots we can see slight differences in the average times of day members of these age groups are arrested.  We can observe that as age increases, generally the time of arrest is earlier in the day though this is only a very slight difference.  For all groups the average time of arrest is very close to 15:00.
+
+
 
 ### Extra analyses
 
@@ -169,4 +190,3 @@ What is the code you use to answer it?:
 ```
 
 What did you observe?
-
