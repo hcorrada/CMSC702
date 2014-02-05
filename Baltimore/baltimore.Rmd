@@ -159,14 +159,37 @@ plot(arrestTab[m]~factor(cctvTab))
 As part of HW1 you will add to this analysis. Please use the following template:
 
 #### Your name(s) here
+Eric Krokos
 
 What question are you asking?:
+What does the distribution of arrests look like for Asians(Blue), Blacks(Red), Whites(Green), and Unknown (Orange)?
 
 What is the code you use to answer it?:
 
 ```{r}
-# code goes here
+arrest_tab=read.csv("BPD_Arrests.csv", stringsAsFactors=FALSE)
+tmp=arrest_tab$sex
+arrest_tab$sex=arrest_tab$race
+arrest_tab$race=tmp
+tmp=gsub("\\)","",gsub("\\(","",arrest_tab$Location))
+tmp=strsplit(tmp,split=",")
+arrest_tab$lon=as.numeric(sapply(tmp,function(x) x[2]))
+arrest_tab$lat=as.numeric(sapply(tmp,function(x) x[1]))
+asian = arrest_tab[arrest_tab$race == "A",]
+black = arrest_tab[arrest_tab$race == "B", ]
+white = arrest_tab[arrest_tab$race == "W", ]
+unknown = arrest_tab[arrest_tab$race == "U", ]
+library(maps)
+library(ggplot2)
+balto_map = subset(map_data("county", region="maryland"),subregion=="baltimore city")
+plt=ggplot()
+plt=plt+geom_polygon(data=balto_map,aes(x=long,y=lat),color="white",fill="gray40")
+plt=plt+geom_point(data=asian,aes(x=lon,y=lat),color="blue",alpha=.1)
+plt=plt+geom_point(data=black,aes(x=lon,y=lat),color="red",alpha=.1)
+plt=plt+geom_point(data=white,aes(x=lon,y=lat),color="green",alpha=.1)
+plt=plt+geom_point(data=unknown,aes(x=lon,y=lat),color="orange",alpha=.1)
+print(plt)
 ```
 
 What did you observe?
-
+The red (Black) dominate the map, but it's interesting that most crimes commited by Whites are done on the southern most part of the city, with Black crime occuring primarily in the upper part. It's difficult to see Asian commited crime. Given that most of the orange dots are in the southern part of the city, I would guess that most of the unknown races are from White people.
