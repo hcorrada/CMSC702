@@ -164,7 +164,7 @@ What question are you asking?:
 
 What is the code you use to answer it?:
 
-```{r}
+```{r yourUserName}
 # code goes here
 ```
 
