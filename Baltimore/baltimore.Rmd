@@ -186,7 +186,7 @@ print(plt)
 What did you observe?
 The red (Black) dominate the map, but it's interesting that most crimes commited by Whites are done on the southern most part of the city, with Black crime occuring primarily in the upper part. It's difficult to see Asian commited crime. Given that most of the orange dots are in the southern part of the city, I would guess that most of the unknown races are from White people.
 
-#### Andy Garron, Mohit Iyyer, Peter Enns
+#### Andy Garron, Mohit Iyyer, Peter Enns, Fan Du
 
 What question are you asking?: In which months do arrests occur the most? On what day of the week do arrests occur the most?
 
