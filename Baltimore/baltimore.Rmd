@@ -166,7 +166,7 @@ What does the distribution of arrests look like for Asians(Blue), Blacks(Red), W
 
 What is the code you use to answer it?:
 
-```{r}
+```{r EKrokos}
 asian = arrest_tab[arrest_tab$race == "A",]
 black = arrest_tab[arrest_tab$race == "B", ]
 white = arrest_tab[arrest_tab$race == "W", ]
