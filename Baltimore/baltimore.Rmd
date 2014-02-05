@@ -167,14 +167,6 @@ What does the distribution of arrests look like for Asians(Blue), Blacks(Red), W
 What is the code you use to answer it?:
 
 ```{r}
-arrest_tab=read.csv("BPD_Arrests.csv", stringsAsFactors=FALSE)
-tmp=arrest_tab$sex
-arrest_tab$sex=arrest_tab$race
-arrest_tab$race=tmp
-tmp=gsub("\\)","",gsub("\\(","",arrest_tab$Location))
-tmp=strsplit(tmp,split=",")
-arrest_tab$lon=as.numeric(sapply(tmp,function(x) x[2]))
-arrest_tab$lat=as.numeric(sapply(tmp,function(x) x[1]))
 asian = arrest_tab[arrest_tab$race == "A",]
 black = arrest_tab[arrest_tab$race == "B", ]
 white = arrest_tab[arrest_tab$race == "W", ]
