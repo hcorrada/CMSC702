@@ -179,10 +179,10 @@ summary(fit)
 ## (Intercept)   33.3878     0.0847   394.1   <2e-16 ***
 ## factor(sex)M  -0.2343     0.0939    -2.5    0.013 *  
 ## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
 ## 
 ## Residual standard error: 11.8 on 104524 degrees of freedom
-## Multiple R-squared:  5.96e-05,	Adjusted R-squared:  5e-05 
+## Multiple R-squared: 5.96e-05,	Adjusted R-squared: 5e-05 
 ## F-statistic: 6.23 on 1 and 104524 DF,  p-value: 0.0126
 ```
 
@@ -353,3 +353,36 @@ print(plt)
 
 What did you observe?
 The red (Black) dominate the map, but it's interesting that most crimes commited by Whites are done on the southern most part of the city, with Black crime occuring primarily in the upper part. It's difficult to see Asian commited crime. Given that most of the orange dots are in the southern part of the city, I would guess that most of the unknown races are from White people.
+
+#### Andy Garron, Mohit Iyyer, Peter Enns
+
+What question are you asking?: In which months do arrests occur the most? On what day of the week do arrests occur the most?
+
+What is the code you use to answer it?:
+
+
+```r
+arrestDates = as.Date(arrest_tab$arrestDate, "%m/%d/%Y")
+dwka <- format(arrestDates, "%a")
+# dwka
+dwkn <- as.numeric(format(arrestDates, "%w"))  # numeric version
+hist(dwkn, main = "Arrests by Day of Week", xlab = "Day of Week", ylab = "Arrest Frequency", 
+    breaks = -0.5 + 0:7, labels = unique(dwka[order(dwkn)]))
+```
+
+![plot of chunk ClouchPotatoes](figure/ClouchPotatoes1.png) 
+
+```r
+
+dwkm <- format(arrestDates, "%b")  # get month labels
+dwkmn <- as.numeric(format(arrestDates, "%m"))  # get numeric data for histogram
+hist(dwkmn, main = "Arrests by Month", xlab = "Month of Year", ylab = "Arrest Frequency", 
+    breaks = 0:12, labels = unique(dwkm[order(dwkmn)]))
+```
+
+![plot of chunk ClouchPotatoes](figure/ClouchPotatoes2.png) 
+
+
+At the month level, we observe that there is a decline in arrest rates during the winter months and that arrests peak in March and August.
+
+At the day level, we observe that most arrests occur in the middle of the week and that significantly fewer arrests occur on the weekends.
