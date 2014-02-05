@@ -185,3 +185,25 @@ print(plt)
 
 What did you observe?
 The red (Black) dominate the map, but it's interesting that most crimes commited by Whites are done on the southern most part of the city, with Black crime occuring primarily in the upper part. It's difficult to see Asian commited crime. Given that most of the orange dots are in the southern part of the city, I would guess that most of the unknown races are from White people.
+
+#### Andy Garron, Mohit Iyyer, Peter Enns
+
+What question are you asking?: In which months do arrests occur the most? On what day of the week do arrests occur the most?
+
+What is the code you use to answer it?:
+
+```{r ClouchPotatoes}
+arrestDates = as.Date(arrest_tab$arrestDate,"%m/%d/%Y")
+dwka <- format(arrestDates , "%a")
+#dwka
+dwkn <- as.numeric(format(arrestDates,"%w")) # numeric version
+hist( dwkn , main = "Arrests by Day of Week", xlab = "Day of Week", ylab = "Arrest Frequency", breaks= -.5+0:7, labels= unique(dwka[order(dwkn)]))
+
+dwkm <- format(arrestDates, "%b") # get month labels
+dwkmn <- as.numeric(format(arrestDates,"%m")) # get numeric data for histogram
+hist(dwkmn, main = "Arrests by Month",xlab = "Month of Year",ylab = "Arrest Frequency",breaks = 0:12 ,labels= unique(dwkm[order(dwkmn)]))
+```
+
+At the month level, we observe that there is a decline in arrest rates during the winter months and that arrests peak in March and August.
+
+At the day level, we observe that most arrests occur in the middle of the week and that significantly fewer arrests occur on the weekends.
