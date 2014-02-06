@@ -227,3 +227,35 @@ ages = cut(ages, 5)
 plot(arrestTime~factor(ages))
 ```
 From these plots we can see slight differences in the average times of day members of these age groups are arrested.  We can observe that as age increases, generally the time of arrest is earlier in the day though this is only a very slight difference.  For all groups the average time of arrest is very close to 15:00.
+
+
+#### Steven Burgart
+
+What question are you asking?: Is there a relationship between the time a person is arrested and their sex?
+
+What is the code you use to answer it?:
+
+```{r sburgart}
+
+# Make a copy of arrest_tab since we need to modify
+arrest_tab_skb <- arrest_tab
+
+# Filter out arrests with unknown sex
+arrest_tab_skb <- arrest_tab_skb[arrest_tab_skb$sex=="M" | arrest_tab_skb$sex=="F",]
+
+# Convert time to just hours as numeric
+arrest_tab_skb["arrestTime"] <- lapply(arrest_tab_skb["arrestTime"], function(x) as.numeric(strftime(strptime(x, format="%H:%M"),"%H")))
+
+# Plot male arrests by hour
+hist(arrest_tab_skb[arrest_tab_skb$sex=='M',]$arrestTime, breaks=24, main="Hour of Arrest Frequency for Males", xlab="Hour of the Day", col="lightblue", xlim=range(0:23), xaxt='n');
+axis(side=1, at=seq(0,23), labels=seq(0,23))
+
+# Plot female arrests by hour
+hist(arrest_tab_skb[arrest_tab_skb$sex=='F',]$arrestTime, breaks=24, main="Hour of Arrest Frequency for Females", xlab="Hour of the Day", col="pink", xlim=range(0:23), xaxt='n');
+axis(side=1, at=seq(0,23), labels=seq(0,23))
+
+# Plot relationship between hour of arrest and sex
+plot(arrest_tab_skb$arrestTime ~ factor(arrest_tab_skb$sex), main="Relationship Between Hour of Arrest and Sex", xlab="Sex", ylab="Hour of Arrest")
+```
+
+What did you observe?: From the two histograms it isn't readily apparent that there is any relationship between the time a person is arrested and their sex. However, from the third plot we can see that males tend to be arrested slightly later in the day when compared to females.
