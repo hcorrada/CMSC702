@@ -179,10 +179,10 @@ summary(fit)
 ## (Intercept)   33.3878     0.0847   394.1   <2e-16 ***
 ## factor(sex)M  -0.2343     0.0939    -2.5    0.013 *  
 ## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## Residual standard error: 11.8 on 104524 degrees of freedom
-## Multiple R-squared: 5.96e-05,	Adjusted R-squared: 5e-05 
+## Multiple R-squared:  5.96e-05,	Adjusted R-squared:  5e-05 
 ## F-statistic: 6.23 on 1 and 104524 DF,  p-value: 0.0126
 ```
 
@@ -306,7 +306,6 @@ plot(arrestTab[m] ~ factor(cctvTab))
 ![plot of chunk unnamed-chunk-12](figure/unnamed-chunk-12.png) 
 
 
-
 ### Extra analyses
 
 As part of HW1 you will add to this analysis. Please use the following template:
@@ -352,9 +351,10 @@ print(plt)
 
 
 What did you observe?
+=======
 The red (Black) dominate the map, but it's interesting that most crimes commited by Whites are done on the southern most part of the city, with Black crime occuring primarily in the upper part. It's difficult to see Asian commited crime. Given that most of the orange dots are in the southern part of the city, I would guess that most of the unknown races are from White people.
 
-#### Andy Garron, Mohit Iyyer, Peter Enns
+#### Andy Garron, Mohit Iyyer, Peter Enns, Fan Du
 
 What question are you asking?: In which months do arrests occur the most? On what day of the week do arrests occur the most?
 
@@ -386,3 +386,28 @@ hist(dwkmn, main = "Arrests by Month", xlab = "Month of Year", ylab = "Arrest Fr
 At the month level, we observe that there is a decline in arrest rates during the winter months and that arrests peak in March and August.
 
 At the day level, we observe that most arrests occur in the middle of the week and that significantly fewer arrests occur on the weekends.
+
+#### Patricia Sazama
+
+Is there a relationship between the age of the arrested individual and the time they are arrested?
+
+
+```r
+# change the time format from hh:mm to hh.mm so it can be converted to a
+# numeric value
+tmp = gsub(":", ".", arrest_tab$arrestTime)
+
+# convert the arrestTime to numeric
+arrestTime = as.numeric(tmp)
+
+# group ages into 5 buckets
+ages = arrest_tab$age
+ages = cut(ages, 5)
+
+# plot the age buckets as a factor of the numeric arrest times
+plot(arrestTime ~ factor(ages))
+```
+
+![plot of chunk psazama](figure/psazama.png) 
+
+From these plots we can see slight differences in the average times of day members of these age groups are arrested.  We can observe that as age increases, generally the time of arrest is earlier in the day though this is only a very slight difference.  For all groups the average time of arrest is very close to 15:00.
