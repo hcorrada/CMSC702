@@ -153,10 +153,114 @@ m=match(names(cctvTab),names(arrestTab))
 plot(arrestTab[m]~factor(cctvTab))
 ```
 
-
 ### Extra analyses
 
 As part of HW1 you will add to this analysis. Please use the following template:
+
+#### Your name(s) here
+Eric Krokos
+
+What question are you asking?:
+What does the distribution of arrests look like for Asians(Blue), Blacks(Red), Whites(Green), and Unknown (Orange)?
+
+What is the code you use to answer it?:
+
+```{r EKrokos}
+asian = arrest_tab[arrest_tab$race == "A",]
+black = arrest_tab[arrest_tab$race == "B", ]
+white = arrest_tab[arrest_tab$race == "W", ]
+unknown = arrest_tab[arrest_tab$race == "U", ]
+library(maps)
+library(ggplot2)
+balto_map = subset(map_data("county", region="maryland"),subregion=="baltimore city")
+plt=ggplot()
+plt=plt+geom_polygon(data=balto_map,aes(x=long,y=lat),color="white",fill="gray40")
+plt=plt+geom_point(data=asian,aes(x=lon,y=lat),color="blue",alpha=.1)
+plt=plt+geom_point(data=black,aes(x=lon,y=lat),color="red",alpha=.1)
+plt=plt+geom_point(data=white,aes(x=lon,y=lat),color="green",alpha=.1)
+plt=plt+geom_point(data=unknown,aes(x=lon,y=lat),color="orange",alpha=.1)
+print(plt)
+```
+
+What did you observe?
+=======
+The red (Black) dominate the map, but it's interesting that most crimes commited by Whites are done on the southern most part of the city, with Black crime occuring primarily in the upper part. It's difficult to see Asian commited crime. Given that most of the orange dots are in the southern part of the city, I would guess that most of the unknown races are from White people.
+
+#### Andy Garron, Mohit Iyyer, Peter Enns, Fan Du
+
+What question are you asking?: In which months do arrests occur the most? On what day of the week do arrests occur the most?
+
+What is the code you use to answer it?:
+
+```{r ClouchPotatoes}
+arrestDates = as.Date(arrest_tab$arrestDate,"%m/%d/%Y")
+dwka <- format(arrestDates , "%a")
+#dwka
+dwkn <- as.numeric(format(arrestDates,"%w")) # numeric version
+hist( dwkn , main = "Arrests by Day of Week", xlab = "Day of Week", ylab = "Arrest Frequency", breaks= -.5+0:7, labels= unique(dwka[order(dwkn)]))
+
+dwkm <- format(arrestDates, "%b") # get month labels
+dwkmn <- as.numeric(format(arrestDates,"%m")) # get numeric data for histogram
+hist(dwkmn, main = "Arrests by Month",xlab = "Month of Year",ylab = "Arrest Frequency",breaks = 0:12 ,labels= unique(dwkm[order(dwkmn)]))
+```
+
+At the month level, we observe that there is a decline in arrest rates during the winter months and that arrests peak in March and August.
+
+At the day level, we observe that most arrests occur in the middle of the week and that significantly fewer arrests occur on the weekends.
+
+#### Patricia Sazama
+
+Is there a relationship between the age of the arrested individual and the time they are arrested?
+
+```{r psazama}
+#change the time format from hh:mm to hh.mm so it can be converted to a numeric value
+tmp=gsub(":",".",arrest_tab$arrestTime)
+
+#convert the arrestTime to numeric
+arrestTime=as.numeric(tmp)
+
+#group ages into 5 buckets
+ages = arrest_tab$age
+ages = cut(ages, 5)
+
+#plot the age buckets as a factor of the numeric arrest times
+plot(arrestTime~factor(ages))
+```
+From these plots we can see slight differences in the average times of day members of these age groups are arrested.  We can observe that as age increases, generally the time of arrest is earlier in the day though this is only a very slight difference.  For all groups the average time of arrest is very close to 15:00.
+
+
+#### Steven Burgart
+
+What question are you asking?: Is there a relationship between the time a person is arrested and their sex?
+
+What is the code you use to answer it?:
+
+```{r sburgart}
+
+# Make a copy of arrest_tab since we need to modify
+arrest_tab_skb <- arrest_tab
+
+# Filter out arrests with unknown sex
+arrest_tab_skb <- arrest_tab_skb[arrest_tab_skb$sex=="M" | arrest_tab_skb$sex=="F",]
+
+# Convert time to just hours as numeric
+arrest_tab_skb["arrestTime"] <- lapply(arrest_tab_skb["arrestTime"], function(x) as.numeric(strftime(strptime(x, format="%H:%M"),"%H")))
+
+# Plot male arrests by hour
+hist(arrest_tab_skb[arrest_tab_skb$sex=='M',]$arrestTime, breaks=24, main="Hour of Arrest Frequency for Males", xlab="Hour of the Day", col="lightblue", xlim=range(0:23), xaxt='n');
+axis(side=1, at=seq(0,23), labels=seq(0,23))
+
+# Plot female arrests by hour
+hist(arrest_tab_skb[arrest_tab_skb$sex=='F',]$arrestTime, breaks=24, main="Hour of Arrest Frequency for Females", xlab="Hour of the Day", col="pink", xlim=range(0:23), xaxt='n');
+axis(side=1, at=seq(0,23), labels=seq(0,23))
+
+# Plot relationship between hour of arrest and sex
+plot(arrest_tab_skb$arrestTime ~ factor(arrest_tab_skb$sex), main="Relationship Between Hour of Arrest and Sex", xlab="Sex", ylab="Hour of Arrest")
+```
+
+
+What did you observe?: From the two histograms it isn't readily apparent that there is any relationship between the time a person is arrested and their sex. However, from the third plot we can see that males tend to be arrested slightly later in the day when compared to females.
+
 
 #### Rob Argue
 
@@ -167,26 +271,16 @@ Do violent crimes occur more in certain areas?
 
 What is the code you use to answer it?:
 
-First lets look at the incident offenses:
 ```{r Rob Argue}
-#setwd("C:/Users/Rob/Documents/GitHub/CMSC702/Baltimore")
 
-with(arrest_tab,table(incidentOffense))
-```
+# The FBI classifies the following as violent crime:
+#  - murder and nonnegligent manslaughter
+#  - forcible rape
+#  - robbery
+#  - aggravated assault
+# as per
+# http://www.fbi.gov/about-us/cjis/ucr/crime-in-the-u.s/2011/crime-in-the-u.s.-2011/violent-crime/violent-crime
 
-
-The FBI classifies the following as violent crime:
- - murder and nonnegligent manslaughter
- - forcible rape
- - robbery
- - aggravated assault
-
-as per
-http://www.fbi.gov/about-us/cjis/ucr/crime-in-the-u.s/2011/crime-in-the-u.s.-2011/violent-crime/violent-crime
-
-So looking at these in a table:
-
-```{r  Rob Argue}
 violent = c("1A-Murder",
             "2A-Rape (Force)",
             "2B-Rape (Attempt)",
@@ -216,21 +310,6 @@ violent = c("1A-Murder",
             "4C-Agg. Asslt.- Oth.",
             "4D-Agg. Asslt.- Hand")
 
-with(arrest_tab,table(incidentOffense[incidentOffense %in% violent]))
-```
-
-And plotting them along with arrests in general:
-
-```{r  Rob Argue}
-tmp=gsub("\\)","",gsub("\\(","",arrest_tab$Location))
-tmp=strsplit(tmp,split=",")
-arrest_tab$lon=as.numeric(sapply(tmp,function(x) x[2]))
-arrest_tab$lat=as.numeric(sapply(tmp,function(x) x[1]))
-
-library(maps)
-library(ggplot2)
-
-balto_map = subset(map_data("county", region="maryland"),subregion=="baltimore city")
 plt=ggplot()
 plt=plt+geom_polygon(data=balto_map,aes(x=long,y=lat),color="white",fill="gray40")
 plt=plt+geom_point(data=arrest_tab,aes(x=lon,y=lat),color="blue",alpha=.1)
