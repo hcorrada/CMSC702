@@ -623,3 +623,92 @@ rm(minors_tab, minorsTable, minorsArray)
 
     * From the last two scatters we can tell that the density is slightly different in the northwest part.
     More interesting conclusions could be drawn if we can compare this result with the local map.
+
+#### Hui Miao
+
+What question are you asking?: What is the most common incident offense, and how does it related to sex, race and district?
+
+What is the code you use to answer it?:
+
+
+```r
+old_par <- par(no.readonly = TRUE)
+
+# first let's look at the bar plot of the distribution of incident offense
+# types as there are many # of inccident offsense types, I use a filter to
+# get rid of 'unknown offense' that we don't care about, and the ones with
+# less than 200 cases in order to make the plot clear to understand
+library(sqldf)
+```
+
+```
+## Loading required package: DBI
+## Loading required package: gsubfn
+## Loading required package: proto
+## Loading required namespace: tcltk
+## Loading required package: chron
+## Loading required package: RSQLite
+## Loading required package: RSQLite.extfuns
+```
+
+```r
+a = sqldf("select incidentOffense, count(*) as cnt from arrest_tab where incidentOffense != 'Unknown Offense' group by incidentOffense having cnt >= 200 order by cnt")
+```
+
+```
+## Loading required package: tcltk
+```
+
+```r
+par(las = 2, mar = c(5, 7, 4, 2))
+barplot(a$cnt, horiz = TRUE, cex.names = 0.7, names.arg = a$incidentOffense)
+```
+
+![plot of chunk imoldcat](figure/imoldcat1.png) 
+
+```r
+
+# as you can see, the most common incident offense is 'Narcotics' (the 1st
+# and 3rd row) next, let's analyze the correlations between 'Narcotics'
+# inccident type and sex, race and district this is a correlation analysis
+# invovling in multiple categorical variables I use a mosaic plot instead of
+# the correlogram plot to show their correlations in one plot
+
+library(vcd)
+```
+
+```
+## Loading required package: grid
+```
+
+```r
+filtered <- subset(arrest_tab, (race == "B" | race == "W") & sex != "" & district != 
+    "" & (incidentOffense == "87-Narcotics" | incidentOffense == "87O-Narcotics (Outside)"))
+filtered$district <- gsub("NORTHERN", "N", gsub("NORTHEASTERN", "NE", gsub("NORTHWESTERN", 
+    "NW", filtered$district)))
+filtered$district <- gsub("SOUTHERN", "S", gsub("SOUTHEASTERN", "SE", gsub("SOUTHWESTERN", 
+    "SW", filtered$district)))
+filtered$district <- gsub("WESTERN", "W", gsub("EASTERN", "E", gsub("CENTRAL", 
+    "C", filtered$district)))
+mosaic(~district + sex + race + incidentOffense, data = filtered, shade = TRUE, 
+    legend = TRUE)
+```
+
+![plot of chunk imoldcat](figure/imoldcat2.png) 
+
+```r
+par(old_par)
+```
+
+
+What did you observe?: The first bar plot shows that the 'Narcotics' is the most common inccident offense in this city. Interestingly 'Narcotics (Outside)' is another top3 inccident offense type.  
+
+In the second plot, I use mosaic plot to visualize the correlations among multiple categorical variables (race (b, w), sex (m, f), district (w, sw, se, s, nw, ne, n, e, c)). Rectangle sizes reflect the frequentices of a group, the colors shows the pearson residuals (blue means above expected value, while red means it's below expected value of fitted model).
+
+Here're some interesting findings:
+
+1. From previous map plots with race info, we know that in the southern regions, white cases and black cases are similar. It is the same case for Narcotics. The south regions (SE, S), the numbers are similar (we can see from the heighs of the rectangle). In other regions, black dominants white. 
+
+2. Where you can find narcotics cases? And where does outside Narcotics case happen more often than indoor? North (N), Southerne East (SE) and South (S) regions have the fewest instances of Narcotics cases. In the north eastern (NE) and south western (SW) regions, the Narcotics outside cases are above expected value, while Eastern (E), Northwestern (NW) and Western (W) regions outside cases are below expected value. 
+
+3. Female's narcotics active region is quite different from male. In the central district (C), both female black and white are above the expected values for both inside and outside narcotics cases, while male cases regardless races are below expected value.
