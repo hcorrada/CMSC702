@@ -235,12 +235,41 @@ Let's make this fancier using the `ggplot2` graphics systems and the `maps` pack
 
 ```r
 library(maps)
+```
+
+```
+## Error: there is no package called 'maps'
+```
+
+```r
 library(ggplot2)
+```
+
+```
+## Loading required package: methods
+```
+
+```r
 
 balto_map = subset(map_data("county", region = "maryland"), subregion == "baltimore city")
+```
+
+```
+## Error: maps package required for this functionality.  Please install and
+## try again.
+```
+
+```r
 plt = ggplot()
 plt = plt + geom_polygon(data = balto_map, aes(x = long, y = lat), color = "white", 
     fill = "gray40")
+```
+
+```
+## Error: object 'balto_map' not found
+```
+
+```r
 plt = plt + geom_point(data = arrest_tab, aes(x = lon, y = lat), color = "blue", 
     alpha = 0.1)
 print(plt)
@@ -265,6 +294,13 @@ cctv_tab$lat = as.numeric(sapply(tmp, function(x) x[1]))
 plt = ggplot()
 plt = plt + geom_polygon(data = balto_map, aes(x = long, y = lat), color = "white", 
     fill = "gray40")
+```
+
+```
+## Error: object 'balto_map' not found
+```
+
+```r
 plt = plt + geom_point(data = arrest_tab, aes(x = lon, y = lat), color = "blue", 
     alpha = 0.1)
 plt = plt + geom_point(data = cctv_tab, aes(x = lon, y = lat), color = "red")
@@ -325,11 +361,33 @@ black = arrest_tab[arrest_tab$race == "B", ]
 white = arrest_tab[arrest_tab$race == "W", ]
 unknown = arrest_tab[arrest_tab$race == "U", ]
 library(maps)
+```
+
+```
+## Error: there is no package called 'maps'
+```
+
+```r
 library(ggplot2)
 balto_map = subset(map_data("county", region = "maryland"), subregion == "baltimore city")
+```
+
+```
+## Error: maps package required for this functionality.  Please install and
+## try again.
+```
+
+```r
 plt = ggplot()
 plt = plt + geom_polygon(data = balto_map, aes(x = long, y = lat), color = "white", 
     fill = "gray40")
+```
+
+```
+## Error: object 'balto_map' not found
+```
+
+```r
 plt = plt + geom_point(data = asian, aes(x = lon, y = lat), color = "blue", 
     alpha = 0.1)
 plt = plt + geom_point(data = black, aes(x = lon, y = lat), color = "red", alpha = 0.1)
@@ -464,52 +522,113 @@ plot(arrest_tab_skb$arrestTime ~ factor(arrest_tab_skb$sex), main = "Relationshi
 
 What did you observe?: From the two histograms it isn't readily apparent that there is any relationship between the time a person is arrested and their sex. However, from the third plot we can see that males tend to be arrested slightly later in the day when compared to females.
 
+#### Hao Zhou(zhhoper), Fang Cheng(Javran)
 
-#### Rob Argue
+* What question are you asking?
 
-What question are you asking?:
+    Is there any difference between minors and adults
+    in terms of time and location?
+    (we suppose people under 21 are minors)
 
-Do violent crimes occur more in certain areas?
-
-
-What is the code you use to answer it?:
+* What is the code you use to answer it?
+    
+    We split data into two parts
+    (i.e.  minors (age < 21) and adults (age >= 21)),
+    plot the distribution of arrest time 
+    and draw scatters according to the location
+    for both minors and adults.
 
 
 ```r
 
-# The FBI classifies the following as violent crime: - murder and
-# nonnegligent manslaughter - forcible rape - robbery - aggravated assault
-# as per
-# http://www.fbi.gov/about-us/cjis/ucr/crime-in-the-u.s/2011/crime-in-the-u.s.-2011/violent-crime/violent-crime
+# copy data frame, filter out invalid data (age = 0)
+arrestTmp <- subset(arrest_tab, arrest_tab$age != 0)
 
-violent = c("1A-Murder", "2A-Rape (Force)", "2B-Rape (Attempt)", "3AF-Robb Hwy-Firearm", 
-    "3AJF-Robb Carjack-Firearm", "3AJK-Robb Carjack-Knife", "3AK-Robb Hwy-Knife", 
-    "3AO-Robb Hwy-Other Wpn", "3CF-Robb Comm-Firearm", "3CK-Robb Comm-Knife", 
-    "3CO-Robb Comm-Other Wpn", "3EF-Robb Gas Station-Firearm", "3EK-Robb Gas Station-Knife", 
-    "3GF-Robb Conv Store-Firearm", "3GK-Robb Conv Store-Knife", "3GO-Robb Conv Store-Other Wpn", 
-    "3JF-Robb Residence-Firearm", "3JK-Robb Residence-Knife", "3JO-Robb Residence-Other Wpn", 
-    "3LF-Robb Bank-Firearm", "3FO-RObb Bank-Other Wpn", "3NF-Robb Misc-Firearm", 
-    "3NK-Robb Misc-Knife", "3NO-Robb Misc-Other Wpn", "4A-Agg. Asslt.- Gun", 
-    "4B-Agg. Asslt.- Cut", "4C-Agg. Asslt.- Oth.", "4D-Agg. Asslt.- Hand")
+# extract geo info
+tmp <- gsub("\\).*", "", gsub(".*\\(", "", arrestTmp$Location))
+tmp = strsplit(tmp, split = ",")
+arrestTmp$lat <- as.numeric(sapply(tmp, function(x) x[2]))
+arrestTmp$lon <- as.numeric(sapply(tmp, function(x) x[1]))
 
-plt = ggplot()
-plt = plt + geom_polygon(data = balto_map, aes(x = long, y = lat), color = "white", 
-    fill = "gray40")
-plt = plt + geom_point(data = arrest_tab, aes(x = lon, y = lat), color = "blue", 
-    alpha = 0.1)
-plt = plt + geom_point(data = arrest_tab[arrest_tab$incidentOffense %in% violent, 
-    ], aes(x = lon, y = lat), color = "red", alpha = 0.2)
-print(plt)
+# suppress warnings
+arrestTmp <- subset(arrestTmp, !is.na(lon) & !is.na(lat))
+
+# tag data with 'minors' and 'adults' according to their ages
+arrestTmp$biAge <- sapply(arrestTmp$age, function(x) {
+    if (x < 21) {
+        return("minors")
+    } else {
+        return("adults")
+    }
+})
+
+# new col: time -> time in Hour
+arrestTmp$arrestTimeH <- as.integer(gsub(":[0-9][0-9]", "", arrestTmp$arrestTime))
+
+# plot minors' distribution
+minors_tab <- subset(arrestTmp, arrestTmp$biAge == "minors")
+minorsArray <- minors_tab$arrestTimeH
+minorsTable <- as.integer(table(factor(minorsArray)))
+barplot(minorsTable, space = 0, width = 1, xlab = "Time", ylab = "Number of arrset", 
+    main = "Number of arrest in each hour (minors)", axes = T)
+axis(side = 1, at = seq(0, 23), labels = seq(0, 23))
 ```
 
+![plot of chunk zhhoper_and_Javran](figure/zhhoper_and_Javran1.png) 
+
+```r
+
+# plot adults' distribution
+adults_tab <- subset(arrestTmp, arrestTmp$biAge == "adults")
+adultsArray <- adults_tab$arrestTimeH
+adultsTable <- as.integer(table(factor((adultsArray))))
+barplot(adultsTable, space = 0, width = 1, xlab = "Time", ylab = "Number of arrset", 
+    main = "Number of arrest in each hour (adults)", axes = T)
+axis(side = 1, at = seq(0, 23), labels = seq(0, 23))
 ```
-## Warning: Removed 40636 rows containing missing values (geom_point).
-## Warning: Removed 997 rows containing missing values (geom_point).
+
+![plot of chunk zhhoper_and_Javran](figure/zhhoper_and_Javran2.png) 
+
+```r
+
+plot(arrestTmp$arrestTimeH ~ factor(arrestTmp$biAge), main = "Relationship Between time of Arrest and minor or not", 
+    xlab = "age", ylab = "Hour of Arrest")
 ```
 
-![plot of chunk Rob Argue](figure/Rob_Argue.png) 
+![plot of chunk zhhoper_and_Javran](figure/zhhoper_and_Javran3.png) 
+
+```r
+
+# visualize arrest location for minors & adults
+smoothScatter(minors_tab$lat, minors_tab$lon, xlab = "Latitude", ylab = "Longitude", 
+    main = "Arrests in Baltimore (minors)")
+```
+
+![plot of chunk zhhoper_and_Javran](figure/zhhoper_and_Javran4.png) 
+
+```r
+smoothScatter(adults_tab$lat, adults_tab$lon, xlab = "Latitude", ylab = "Longitude", 
+    main = "Arrests in Baltimore (adults)")
+```
+
+![plot of chunk zhhoper_and_Javran](figure/zhhoper_and_Javran5.png) 
+
+```r
+
+# cleanup
+rm(arrestTmp, tmp)
+rm(adults_tab, adultsTable, adultsArray)
+rm(minors_tab, minorsTable, minorsArray)
+
+```
 
 
-What did you observe?
+* What did you observe?
 
-It appears that there is a heavier concentration of violent crimes in the inner city, particularly in a few hotspots (of which I am unaware the significance of). There also appear to be a couple of specific outlying locations where an unusually large number of violent crimes occur.
+    * Through the first two figures, we observe that
+    minors tend to commit less during 1 - 6 a.m., but more during 2 - 8 p.m.
+
+    * There is little difference between the time distribution of minors and adults.
+
+    * From the last two scatters we can tell that the density is slightly different in the northwest part.
+    More interesting conclusions could be drawn if we can compare this result with the local map.

@@ -320,3 +320,91 @@ print(plt)
 What did you observe?
 
 It appears that there is a heavier concentration of violent crimes in the inner city, particularly in a few hotspots (of which I am unaware the significance of). There also appear to be a couple of specific outlying locations where an unusually large number of violent crimes occur.
+#### Hao Zhou(zhhoper), Fang Cheng(Javran)
+
+* What question are you asking?
+
+    Is there any difference between minors and adults
+    in terms of time and location?
+    (we suppose people under 21 are minors)
+
+* What is the code you use to answer it?
+    
+    We split data into two parts
+    (i.e.  minors (age < 21) and adults (age >= 21)),
+    plot the distribution of arrest time 
+    and draw scatters according to the location
+    for both minors and adults.
+
+```{r zhhoper_and_Javran}
+
+# copy data frame,
+#   filter out invalid data (age = 0)
+arrestTmp <- subset(arrest_tab, arrest_tab$age !=0)
+
+# extract geo info
+tmp <- gsub("\\).*", "", gsub(".*\\(", "", arrestTmp$Location))
+tmp = strsplit(tmp, split = ",")
+arrestTmp$lat <- as.numeric(sapply(tmp, function(x) x[2]))
+arrestTmp$lon <- as.numeric(sapply(tmp, function(x) x[1]))
+
+# suppress warnings
+arrestTmp <- subset(arrestTmp, !is.na(lon) & !is.na(lat))
+
+# tag data with "minors" and "adults" according to their ages
+arrestTmp$biAge <- sapply(arrestTmp$age, function(x) {
+  if (x < 21) {return("minors")}
+        else  {return("adults")}})
+
+# new col: time -> time in Hour
+arrestTmp$arrestTimeH <- as.integer(
+  gsub(":[0-9][0-9]","",
+  arrestTmp$arrestTime))
+
+# plot minors' distribution
+minors_tab <- subset(arrestTmp, arrestTmp$biAge == "minors")
+minorsArray <- minors_tab$arrestTimeH
+minorsTable <- as.integer(table(factor(minorsArray)));
+barplot(minorsTable, space = 0, width = 1,
+        xlab = "Time", ylab="Number of arrset",
+        main="Number of arrest in each hour (minors)", axes = T)
+axis(side = 1, at = seq(0, 23), labels = seq(0, 23))
+
+# plot adults' distribution
+adults_tab <- subset(arrestTmp, arrestTmp$biAge == "adults")
+adultsArray <- adults_tab$arrestTimeH
+adultsTable <- as.integer(table(factor((adultsArray))));
+barplot(adultsTable, space = 0,width = 1,
+        xlab = "Time", ylab="Number of arrset",
+        main="Number of arrest in each hour (adults)",axes = T)
+axis(side = 1, at = seq(0, 23), labels = seq(0, 23))
+
+plot(arrestTmp$arrestTimeH~factor(arrestTmp$biAge),
+    main = "Relationship Between time of Arrest and minor or not",
+    xlab = "age", ylab = "Hour of Arrest")
+
+# visualize arrest location for minors & adults
+smoothScatter(minors_tab$lat, minors_tab$lon,
+              xlab = "Latitude", ylab = "Longitude",
+              main = "Arrests in Baltimore (minors)")
+smoothScatter(adults_tab$lat, adults_tab$lon,
+              xlab = "Latitude", ylab = "Longitude",
+              main = "Arrests in Baltimore (adults)")
+
+# cleanup
+rm(arrestTmp,tmp)
+rm(adults_tab,adultsTable,adultsArray)
+rm(minors_tab,minorsTable,minorsArray)
+
+
+```
+
+* What did you observe?
+
+    * Through the first two figures, we observe that
+    minors tend to commit less during 1 - 6 a.m., but more during 2 - 8 p.m.
+
+    * There is little difference between the time distribution of minors and adults.
+
+    * From the last two scatters we can tell that the density is slightly different in the northwest part.
+    More interesting conclusions could be drawn if we can compare this result with the local map.
