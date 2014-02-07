@@ -235,12 +235,41 @@ Let's make this fancier using the `ggplot2` graphics systems and the `maps` pack
 
 ```r
 library(maps)
+```
+
+```
+## Error: there is no package called 'maps'
+```
+
+```r
 library(ggplot2)
+```
+
+```
+## Loading required package: methods
+```
+
+```r
 
 balto_map = subset(map_data("county", region = "maryland"), subregion == "baltimore city")
+```
+
+```
+## Error: maps package required for this functionality.  Please install and
+## try again.
+```
+
+```r
 plt = ggplot()
 plt = plt + geom_polygon(data = balto_map, aes(x = long, y = lat), color = "white", 
     fill = "gray40")
+```
+
+```
+## Error: object 'balto_map' not found
+```
+
+```r
 plt = plt + geom_point(data = arrest_tab, aes(x = lon, y = lat), color = "blue", 
     alpha = 0.1)
 print(plt)
@@ -265,6 +294,13 @@ cctv_tab$lat = as.numeric(sapply(tmp, function(x) x[1]))
 plt = ggplot()
 plt = plt + geom_polygon(data = balto_map, aes(x = long, y = lat), color = "white", 
     fill = "gray40")
+```
+
+```
+## Error: object 'balto_map' not found
+```
+
+```r
 plt = plt + geom_point(data = arrest_tab, aes(x = lon, y = lat), color = "blue", 
     alpha = 0.1)
 plt = plt + geom_point(data = cctv_tab, aes(x = lon, y = lat), color = "red")
@@ -325,11 +361,33 @@ black = arrest_tab[arrest_tab$race == "B", ]
 white = arrest_tab[arrest_tab$race == "W", ]
 unknown = arrest_tab[arrest_tab$race == "U", ]
 library(maps)
+```
+
+```
+## Error: there is no package called 'maps'
+```
+
+```r
 library(ggplot2)
 balto_map = subset(map_data("county", region = "maryland"), subregion == "baltimore city")
+```
+
+```
+## Error: maps package required for this functionality.  Please install and
+## try again.
+```
+
+```r
 plt = ggplot()
 plt = plt + geom_polygon(data = balto_map, aes(x = long, y = lat), color = "white", 
     fill = "gray40")
+```
+
+```
+## Error: object 'balto_map' not found
+```
+
+```r
 plt = plt + geom_point(data = asian, aes(x = lon, y = lat), color = "blue", 
     alpha = 0.1)
 plt = plt + geom_point(data = black, aes(x = lon, y = lat), color = "red", alpha = 0.1)
@@ -462,3 +520,72 @@ plot(arrest_tab_skb$arrestTime ~ factor(arrest_tab_skb$sex), main = "Relationshi
 
 
 What did you observe?: From the two histograms it isn't readily apparent that there is any relationship between the time a person is arrested and their sex. However, from the third plot we can see that males tend to be arrested slightly later in the day when compared to females.
+
+#### Hao Zhou, Fang Cheng
+
+* What question are you asking?
+
+    Is there any difference of the distrubtion of arrest time betweem minors and adults? (we suppose people under 21 are minors)
+
+
+* What is the code you use to answer it?
+
+
+```r
+# timeArray <- arrest_tab$arrestTime timeArray <-
+# gsub(':[0-9][0-9]','',timeArray) timeArray <- factor(timeArray) timeTable
+# <- as.integer(table(timeArray)); barplot(timeTable, space = 0.2,width = 2,
+# xlab = 'Time', ylab='Number of arrset', axes = T)
+
+# filter those have 0 age
+arrestTmp <- subset(arrest_tab, arrest_tab$age != 0)
+
+# give new attribute old and young according to their ages
+arrestTmp$biAge <- sapply(arrestTmp$age, function(x) {
+    if (x < 21) {
+        return("young")
+    } else {
+        return("old")
+    }
+})
+
+# change time to integer
+arrestTmp$arrestTime <- as.integer(gsub(":[0-9][0-9]", "", arrestTmp$arrestTime))
+
+# plot young people's distribution
+young_tab <- subset(arrestTmp, arrestTmp$biAge == "young")
+youngArray <- young_tab$arrestTime
+youngTable <- as.integer(table(factor(youngArray)))
+barplot(youngTable, space = 0, width = 1, xlab = "Time", ylab = "Number of arrset", 
+    main = "Number of arrest minors in each hour", axes = T)
+axis(side = 1, at = seq(0, 23), labels = seq(0, 23))
+```
+
+![plot of chunk unnamed-chunk-13](figure/unnamed-chunk-131.png) 
+
+```r
+
+# plot old people's distribution
+old_tab <- subset(arrestTmp, arrestTmp$biAge == "old")
+oldArray <- old_tab$arrestTime
+oldTable <- as.integer(table(factor((oldArray))))
+barplot(oldTable, space = 0, width = 1, xlab = "Time", ylab = "Number of arrset", 
+    main = "Number of arrest adults in each hour", axes = T)
+axis(side = 1, at = seq(0, 23), labels = seq(0, 23))
+```
+
+![plot of chunk unnamed-chunk-13](figure/unnamed-chunk-132.png) 
+
+```r
+
+
+plot(arrestTmp$arrestTime ~ factor(arrestTmp$biAge), main = "Relationship Between time of Arrest and minor or not", 
+    xlab = "age", ylab = "Hour of Arrest")
+```
+
+![plot of chunk unnamed-chunk-13](figure/unnamed-chunk-133.png) 
+
+
+* What did you observe?
+
+    Through the three figures, we find that there is no difference between the time distribution of young and old people
