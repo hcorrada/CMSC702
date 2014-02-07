@@ -235,41 +235,12 @@ Let's make this fancier using the `ggplot2` graphics systems and the `maps` pack
 
 ```r
 library(maps)
-```
-
-```
-## Error: there is no package called 'maps'
-```
-
-```r
 library(ggplot2)
-```
-
-```
-## Loading required package: methods
-```
-
-```r
 
 balto_map = subset(map_data("county", region = "maryland"), subregion == "baltimore city")
-```
-
-```
-## Error: maps package required for this functionality.  Please install and
-## try again.
-```
-
-```r
 plt = ggplot()
 plt = plt + geom_polygon(data = balto_map, aes(x = long, y = lat), color = "white", 
     fill = "gray40")
-```
-
-```
-## Error: object 'balto_map' not found
-```
-
-```r
 plt = plt + geom_point(data = arrest_tab, aes(x = lon, y = lat), color = "blue", 
     alpha = 0.1)
 print(plt)
@@ -294,13 +265,6 @@ cctv_tab$lat = as.numeric(sapply(tmp, function(x) x[1]))
 plt = ggplot()
 plt = plt + geom_polygon(data = balto_map, aes(x = long, y = lat), color = "white", 
     fill = "gray40")
-```
-
-```
-## Error: object 'balto_map' not found
-```
-
-```r
 plt = plt + geom_point(data = arrest_tab, aes(x = lon, y = lat), color = "blue", 
     alpha = 0.1)
 plt = plt + geom_point(data = cctv_tab, aes(x = lon, y = lat), color = "red")
@@ -361,33 +325,11 @@ black = arrest_tab[arrest_tab$race == "B", ]
 white = arrest_tab[arrest_tab$race == "W", ]
 unknown = arrest_tab[arrest_tab$race == "U", ]
 library(maps)
-```
-
-```
-## Error: there is no package called 'maps'
-```
-
-```r
 library(ggplot2)
 balto_map = subset(map_data("county", region = "maryland"), subregion == "baltimore city")
-```
-
-```
-## Error: maps package required for this functionality.  Please install and
-## try again.
-```
-
-```r
 plt = ggplot()
 plt = plt + geom_polygon(data = balto_map, aes(x = long, y = lat), color = "white", 
     fill = "gray40")
-```
-
-```
-## Error: object 'balto_map' not found
-```
-
-```r
 plt = plt + geom_point(data = asian, aes(x = lon, y = lat), color = "blue", 
     alpha = 0.1)
 plt = plt + geom_point(data = black, aes(x = lon, y = lat), color = "red", alpha = 0.1)
@@ -522,6 +464,55 @@ plot(arrest_tab_skb$arrestTime ~ factor(arrest_tab_skb$sex), main = "Relationshi
 
 What did you observe?: From the two histograms it isn't readily apparent that there is any relationship between the time a person is arrested and their sex. However, from the third plot we can see that males tend to be arrested slightly later in the day when compared to females.
 
+
+#### Rob Argue
+
+What question are you asking?:
+
+Do violent crimes occur more in certain areas?
+
+
+What is the code you use to answer it?:
+
+
+```r
+
+# The FBI classifies the following as violent crime: - murder and
+# nonnegligent manslaughter - forcible rape - robbery - aggravated assault
+# as per
+# http://www.fbi.gov/about-us/cjis/ucr/crime-in-the-u.s/2011/crime-in-the-u.s.-2011/violent-crime/violent-crime
+
+violent = c("1A-Murder", "2A-Rape (Force)", "2B-Rape (Attempt)", "3AF-Robb Hwy-Firearm", 
+    "3AJF-Robb Carjack-Firearm", "3AJK-Robb Carjack-Knife", "3AK-Robb Hwy-Knife", 
+    "3AO-Robb Hwy-Other Wpn", "3CF-Robb Comm-Firearm", "3CK-Robb Comm-Knife", 
+    "3CO-Robb Comm-Other Wpn", "3EF-Robb Gas Station-Firearm", "3EK-Robb Gas Station-Knife", 
+    "3GF-Robb Conv Store-Firearm", "3GK-Robb Conv Store-Knife", "3GO-Robb Conv Store-Other Wpn", 
+    "3JF-Robb Residence-Firearm", "3JK-Robb Residence-Knife", "3JO-Robb Residence-Other Wpn", 
+    "3LF-Robb Bank-Firearm", "3FO-RObb Bank-Other Wpn", "3NF-Robb Misc-Firearm", 
+    "3NK-Robb Misc-Knife", "3NO-Robb Misc-Other Wpn", "4A-Agg. Asslt.- Gun", 
+    "4B-Agg. Asslt.- Cut", "4C-Agg. Asslt.- Oth.", "4D-Agg. Asslt.- Hand")
+
+plt = ggplot()
+plt = plt + geom_polygon(data = balto_map, aes(x = long, y = lat), color = "white", 
+    fill = "gray40")
+plt = plt + geom_point(data = arrest_tab, aes(x = lon, y = lat), color = "blue", 
+    alpha = 0.1)
+plt = plt + geom_point(data = arrest_tab[arrest_tab$incidentOffense %in% violent, 
+    ], aes(x = lon, y = lat), color = "red", alpha = 0.2)
+print(plt)
+```
+
+```
+## Warning: Removed 40636 rows containing missing values (geom_point).
+## Warning: Removed 997 rows containing missing values (geom_point).
+```
+
+![plot of chunk Rob Argue](figure/Rob_Argue.png) 
+
+
+What did you observe?
+
+It appears that there is a heavier concentration of violent crimes in the inner city, particularly in a few hotspots (of which I am unaware the significance of). There also appear to be a couple of specific outlying locations where an unusually large number of violent crimes occur.
 #### Hao Zhou(zhhoper), Fang Cheng(Javran)
 
 * What question are you asking?

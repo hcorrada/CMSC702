@@ -271,7 +271,7 @@ Do violent crimes occur more in certain areas?
 
 What is the code you use to answer it?:
 
-```{r Rob Argue}
+```{r RobArgue}
 
 # The FBI classifies the following as violent crime:
 #  - murder and nonnegligent manslaughter
