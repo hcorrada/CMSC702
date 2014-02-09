@@ -507,7 +507,7 @@ print(plt)
 ## Warning: Removed 997 rows containing missing values (geom_point).
 ```
 
-![plot of chunk Rob Argue](figure/Rob_Argue.png) 
+![plot of chunk RobArgue](figure/RobArgue.png) 
 
 
 What did you observe?
@@ -712,3 +712,43 @@ Here're some interesting findings:
 2. Where you can find narcotics cases? And where does outside Narcotics case happen more often than indoor? North (N), Southerne East (SE) and South (S) regions have the fewest instances of Narcotics cases. In the north eastern (NE) and south western (SW) regions, the Narcotics outside cases are above expected value, while Eastern (E), Northwestern (NW) and Western (W) regions outside cases are below expected value. 
 
 3. Female's narcotics active region is quite different from male. In the central district (C), both female black and white are above the expected values for both inside and outside narcotics cases, while male cases regardless races are below expected value.
+
+
+#### Ben Klimkowski and Jon Fetter-Degges
+
+What neighborhoods have the highest number of arrests? Of narcotics arrests?
+
+
+```r
+# We begin by counting the total number of arrest records per neighborhood,
+# throwing out those where the neighborhood is empty.
+nfreq <- table(arrest_tab$neighborhood[arrest_tab$neighborhood != ""])
+# Now we do it again, using only narcotics arrests.
+nnbr <- arrest_tab$neighborhood[grep("narcotics", arrest_tab$incidentOffense, 
+    ignore.case = TRUE)]
+nfreq.narc <- table(nnbr[nnbr != ""])
+# We want to put these vectors into the same data frame, so let's throw away
+# neighborhoods with no narcotics arrests.
+nfreq <- nfreq[names(nfreq) %in% names(nfreq.narc)]
+df <- data.frame(nfreq)
+df$narc <- nfreq.narc
+# Now we can sort the frame by total number of arrests.
+df <- df[order(df$nfreq, df$narc), ]
+df$nonnarc <- df$nfreq - df$narc
+# And generate a plot of neighborhoods with the most arrests, along with how
+# many of them are for narcotics.  We're copying Hui Miao's code to save and
+# restore graph parameters.
+old_par <- par(no.readonly = TRUE)
+par(las = 2, mar = c(4, 9, 3, 2) + 0.1)
+barplot(t(as.matrix(df[df$nfreq > 600, 2:3])), horiz = TRUE, col = c("orange", 
+    "blue"), cex.names = 0.7)
+legend(2000, 12, legend = c("narcotics", "non-narcotics"), fill = c("orange", 
+    "blue"), cex = 0.7)
+```
+
+![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges.png) 
+
+```r
+par(old_par)
+```
+

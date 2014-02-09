@@ -452,3 +452,83 @@ Here're some interesting findings:
 2. Where you can find narcotics cases? And where does outside Narcotics case happen more often than indoor? North (N), Southerne East (SE) and South (S) regions have the fewest instances of Narcotics cases. In the north eastern (NE) and south western (SW) regions, the Narcotics outside cases are above expected value, while Eastern (E), Northwestern (NW) and Western (W) regions outside cases are below expected value. 
 
 3. Female's narcotics active region is quite different from male. In the central district (C), both female black and white are above the expected values for both inside and outside narcotics cases, while male cases regardless races are below expected value.
+
+
+#### Ben Klimkowski and Jon Fetter-Degges
+What question are you asking?:
+
+What neighborhoods have the highest number of arrests? Of narcotics arrests? What is the nature of the crime in the worst neighborhoods?
+
+What is the code you use to answer it?:
+```{r Klimkowski_and_Fetter_Degges}
+# We begin by counting the total number of arrest records per neighborhood, throwing
+# out those where the neighborhood is empty.
+total <- table(arrest_tab$neighborhood[arrest_tab$neighborhood != ""])
+# Now we do it again, using only narcotics arrests.
+narc.arrests <- arrest_tab$neighborhood[grep("narcotics", 
+                                     arrest_tab$incidentOffense, ignore.case=TRUE)]
+narc <- table(narc.arrests[narc.arrests != ""])
+# We want to put these vectors into the same data frame, so let's throw away
+# neighborhoods with no narcotics arrests.
+total <- total[names(total) %in% names(narc)]
+df <- data.frame(total)
+df$narc <- narc
+# Now we can sort the frame by total number of arrests.
+df <- df[order(df$total, df$narc), ]
+df$nonnarc <- df$total - df$narc
+# We'll get rid of extra variables; everything we need is in the frame.
+rm(total, narc, narc.arrests)
+# And generate a plot of neighborhoods with the most arrests, along with how many of
+# them are for narcotics.
+# We looked at Hui Miao's code to find out how to save and restore graph parameters.
+old_par <- par(no.readonly = TRUE)
+par(las=2, mar=c(4, 9, 3, 2)+0.1)
+barplot(t(as.matrix(df[df$total>600, 2:3])), horiz=TRUE, col=c("orange", "blue"), cex.names=0.7, main="Number of Arrests per Neighborhood--")
+legend(2000, 12, legend=c("narcotics", "non-narcotics"), fill=c("orange", "blue"), cex=0.7)
+par(old_par)
+
+#Using the code above it, we will now create graphics for the 5 neighborhoods with the most crime:
+##Downtown, Sandtown-Winchester, Central Park Heights, Broadway East, Belair-Edison
+
+library(plotrix)
+bmoreHoodAnalyze<-function(arg1){
+  #This function cleans the Baltimore dataset by combining similar crimes and
+  #and graphically depicts the most frequently crimes in an area
+  a<-table(arrest_tab$incidentOffense[arrest_tab$neighborhood==arg1])
+  df<-data.frame(a)
+  
+  #Combine sums
+  ##Narcotics
+  narcoSum<-sum(df$Freq[df$Var1=="87O-Narcotics (Outside)"| df$Var1=="87-Narcotics"])
+  df$Freq[df$Var1 == '87-Narcotics']<-narcoSum
+  df<-df[!df$Var1 == '87O-Narcotics (Outside)',]
+  ##Unlabeled crimes
+  unkSum<-sum(df$Freq[df$Var1=="Unknown Offense"| df$Var1=="79-Other"])
+  df$Freq[df$Var1 == 'Unknown Offense']<-unkSum
+  df<-df[!df$Var1 == '79-Other',]
+  df<-df[!df$Var1 == 'Unknown Offense',]
+
+  #Concatenate the remainder of the crimes
+  df <-df[order(-df$Freq),]
+  l <-as.vector(df[,1])[0:5]
+  freq <-as.vector(df[,2])[0:5]
+  freq<-c(freq,sum(as.vector(df[,2])[6:dim(df)[1]])+unkSum)
+  l<-c(l,"Other")
+  title<-paste0("Distribution of Type of Crime in ", arg1)
+  pie3D(freq,labels=l, explode=.2,theta=pi/2.5,labelcex=.7, main=title)
+}
+
+
+bmoreHoodAnalyze('Downtown')
+bmoreHoodAnalyze('Sandtown-Winchester')
+bmoreHoodAnalyze('Central Park Heights')
+bmoreHoodAnalyze('Broadway East')
+bmoreHoodAnalyze('Belair-Edison')
+
+
+```
+What did you observe?:
+
+It is clear from this analysis that narcotics related crimes are the most frequent ones across many neighborhoods in Baltimore.
+
+Unfortunately, the Baltimore database left many entries as "79-Other" or unknown, so specific crimes are hard to correlate.  However, with some cleaning of the data-set, a clear pattern emerged in these problem spots.  After narcotics, the most frequent crime to be encountered would be assault or search/seizure related, followed by towed vehicles.
