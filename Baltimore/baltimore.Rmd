@@ -539,7 +539,7 @@ Unfortunately, the Baltimore database left many entries as "79-Other" or unknown
 
 What question are you asking?:
 
-    1. As presented earlier by another team, arrests rate on the weekend is not high as in the middle of the week! Although it was expected for crimes to be more in the weekend. So Why is that?
+    1. As presented earlier by another team, arrests rate on the weekend is not as high as in the middle of the week, although it was expected for crimes to be a bit more in the weekend. So Why is that?
 
     2. How is the number of vacant houses correlated with the crime rate in a neighborhood? We are concerned with two types of crimes: 1) Violence-related. 2) Narcotic-related. We obtained a dataset for vacant buildings in Baltimore and used it to plot their locations vs. the geographical distribution of each crime category.
 
@@ -624,11 +624,11 @@ plot_map(map, narcotic_arrests, vacant_tab)
 
 What did you observe?:
 
-    1. For Test1: 
-      - As seen from figures, violence-related crimes are high in weekends (with a peak on Saturday) as anticipated.
-      - Both narcotic-related arrests and arrests with unknown-offense have their peak in the middle of the week, with lower rate on weekends.
-      - As the number of records for narcotic-related & unknown offense arrests are much higher than violence-related arrests, that is why the total crime rate has its peak on Wednesday, not in weekends.
+    1. For Q1: 
+      - As observed from the figures, violence-related arrests are high in weekends (with a peak on Saturday) as anticipated.
+      - Both narcotic-related arrests and arrests with unknown-offense have their peak in the middle of the week, with a lower rate on weekends.
+      - As the number of records for narcotic-related and unknown offense arrests are much higher than violence-related arrests, the overall total crime rate has its peak on Wednesday, not in weekends.
 
-    2. For Test2:
-      As predicted, the figures show that the vacant buildings are correlated with the crime rate in a neighborhood, with a bit more correlation with neighborhoods where arrests due to violence occured than the narcotic-related arrests.
+    2. For Q2:
+      As predicted, the figures show that the vacant buildings in a neighborhood are correlated with its crime rate, with a bit more correlation with neighborhoods where arrests due to violence occurred than the narcotic-related arrests.
 ---
