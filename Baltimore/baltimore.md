@@ -828,7 +828,6 @@ What did you observe?:
 It is clear from this analysis that narcotics related crimes are the most frequent ones across many neighborhoods in Baltimore.
 
 Unfortunately, the Baltimore database left many entries as "79-Other" or unknown, so specific crimes are hard to correlate.  However, with some cleaning of the data-set, a clear pattern emerged in these problem spots.  After narcotics, the most frequent crime to be encountered would be assault or search/seizure related, followed by towed vehicles.
-<<<<<<< HEAD
 
 
 ---
@@ -974,5 +973,3 @@ What did you observe?:
     2. For Q2:
       As predicted, the figures show that the vacant buildings in a neighborhood are correlated with its crime rate, with a bit more correlation with neighborhoods where arrests due to violence occurred than the narcotic-related arrests.
 ---
-=======
->>>>>>> upstream/master
