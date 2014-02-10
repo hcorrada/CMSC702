@@ -715,40 +715,114 @@ Here're some interesting findings:
 
 
 #### Ben Klimkowski and Jon Fetter-Degges
+What question are you asking?:
 
-What neighborhoods have the highest number of arrests? Of narcotics arrests?
+What neighborhoods have the highest number of arrests? Of narcotics arrests? What is the nature of the crime in the worst neighborhoods?
 
+What is the code you use to answer it?:
 
 ```r
 # We begin by counting the total number of arrest records per neighborhood,
 # throwing out those where the neighborhood is empty.
-nfreq <- table(arrest_tab$neighborhood[arrest_tab$neighborhood != ""])
+total <- table(arrest_tab$neighborhood[arrest_tab$neighborhood != ""])
 # Now we do it again, using only narcotics arrests.
-nnbr <- arrest_tab$neighborhood[grep("narcotics", arrest_tab$incidentOffense, 
+narc.arrests <- arrest_tab$neighborhood[grep("narcotics", arrest_tab$incidentOffense, 
     ignore.case = TRUE)]
-nfreq.narc <- table(nnbr[nnbr != ""])
+narc <- table(narc.arrests[narc.arrests != ""])
 # We want to put these vectors into the same data frame, so let's throw away
 # neighborhoods with no narcotics arrests.
-nfreq <- nfreq[names(nfreq) %in% names(nfreq.narc)]
-df <- data.frame(nfreq)
-df$narc <- nfreq.narc
+total <- total[names(total) %in% names(narc)]
+df <- data.frame(total)
+df$narc <- narc
 # Now we can sort the frame by total number of arrests.
-df <- df[order(df$nfreq, df$narc), ]
-df$nonnarc <- df$nfreq - df$narc
+df <- df[order(df$total, df$narc), ]
+df$nonnarc <- df$total - df$narc
+# We'll get rid of extra variables; everything we need is in the frame.
+rm(total, narc, narc.arrests)
 # And generate a plot of neighborhoods with the most arrests, along with how
-# many of them are for narcotics.  We're copying Hui Miao's code to save and
-# restore graph parameters.
+# many of them are for narcotics.  We looked at Hui Miao's code to find out
+# how to save and restore graph parameters.
 old_par <- par(no.readonly = TRUE)
 par(las = 2, mar = c(4, 9, 3, 2) + 0.1)
-barplot(t(as.matrix(df[df$nfreq > 600, 2:3])), horiz = TRUE, col = c("orange", 
-    "blue"), cex.names = 0.7)
+barplot(t(as.matrix(df[df$total > 600, 2:3])), horiz = TRUE, col = c("orange", 
+    "blue"), cex.names = 0.7, main = "Number of Arrests per Neighborhood--")
 legend(2000, 12, legend = c("narcotics", "non-narcotics"), fill = c("orange", 
     "blue"), cex = 0.7)
 ```
 
-![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges.png) 
+![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges1.png) 
 
 ```r
 par(old_par)
+
+# Using the code above it, we will now create graphics for the 5
+# neighborhoods with the most crime: Downtown, Sandtown-Winchester, Central
+# Park Heights, Broadway East, Belair-Edison
+
+library(plotrix)
+bmoreHoodAnalyze <- function(arg1) {
+    # This function cleans the Baltimore dataset by combining similar crimes and
+    # and graphically depicts the most frequently crimes in an area
+    a <- table(arrest_tab$incidentOffense[arrest_tab$neighborhood == arg1])
+    df <- data.frame(a)
+    
+    # Combine sums Narcotics
+    narcoSum <- sum(df$Freq[df$Var1 == "87O-Narcotics (Outside)" | df$Var1 == 
+        "87-Narcotics"])
+    df$Freq[df$Var1 == "87-Narcotics"] <- narcoSum
+    df <- df[!df$Var1 == "87O-Narcotics (Outside)", ]
+    ## Unlabeled crimes
+    unkSum <- sum(df$Freq[df$Var1 == "Unknown Offense" | df$Var1 == "79-Other"])
+    df$Freq[df$Var1 == "Unknown Offense"] <- unkSum
+    df <- df[!df$Var1 == "79-Other", ]
+    df <- df[!df$Var1 == "Unknown Offense", ]
+    
+    # Concatenate the remainder of the crimes
+    df <- df[order(-df$Freq), ]
+    l <- as.vector(df[, 1])[0:5]
+    freq <- as.vector(df[, 2])[0:5]
+    freq <- c(freq, sum(as.vector(df[, 2])[6:dim(df)[1]]) + unkSum)
+    l <- c(l, "Other")
+    title <- paste0("Distribution of Type of Crime in ", arg1)
+    pie3D(freq, labels = l, explode = 0.2, theta = pi/2.5, labelcex = 0.7, main = title)
+}
+
+
+bmoreHoodAnalyze("Downtown")
 ```
 
+![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges2.png) 
+
+```r
+bmoreHoodAnalyze("Sandtown-Winchester")
+```
+
+![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges3.png) 
+
+```r
+bmoreHoodAnalyze("Central Park Heights")
+```
+
+![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges4.png) 
+
+```r
+bmoreHoodAnalyze("Broadway East")
+```
+
+![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges5.png) 
+
+```r
+bmoreHoodAnalyze("Belair-Edison")
+```
+
+![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges6.png) 
+
+```r
+
+```
+
+What did you observe?:
+
+It is clear from this analysis that narcotics related crimes are the most frequent ones across many neighborhoods in Baltimore.
+
+Unfortunately, the Baltimore database left many entries as "79-Other" or unknown, so specific crimes are hard to correlate.  However, with some cleaning of the data-set, a clear pattern emerged in these problem spots.  After narcotics, the most frequent crime to be encountered would be assault or search/seizure related, followed by towed vehicles.
