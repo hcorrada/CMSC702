@@ -664,7 +664,7 @@ par(las = 2, mar = c(5, 7, 4, 2))
 barplot(a$cnt, horiz = TRUE, cex.names = 0.7, names.arg = a$incidentOffense)
 ```
 
-![plot of chunk imoldcat](figure/imoldcat1.png) 
+![plot of chunk imoldcat](figure/imoldcat.png) 
 
 ```r
 
@@ -678,7 +678,7 @@ library(vcd)
 ```
 
 ```
-## Loading required package: grid
+## Error: there is no package called 'vcd'
 ```
 
 ```r
@@ -694,7 +694,9 @@ mosaic(~district + sex + race + incidentOffense, data = filtered, shade = TRUE,
     legend = TRUE)
 ```
 
-![plot of chunk imoldcat](figure/imoldcat2.png) 
+```
+## Error: could not find function "mosaic"
+```
 
 ```r
 par(old_par)
@@ -715,40 +717,259 @@ Here're some interesting findings:
 
 
 #### Ben Klimkowski and Jon Fetter-Degges
+What question are you asking?:
 
-What neighborhoods have the highest number of arrests? Of narcotics arrests?
+What neighborhoods have the highest number of arrests? Of narcotics arrests? What is the nature of the crime in the worst neighborhoods?
 
+What is the code you use to answer it?:
 
 ```r
 # We begin by counting the total number of arrest records per neighborhood,
 # throwing out those where the neighborhood is empty.
-nfreq <- table(arrest_tab$neighborhood[arrest_tab$neighborhood != ""])
+total <- table(arrest_tab$neighborhood[arrest_tab$neighborhood != ""])
 # Now we do it again, using only narcotics arrests.
-nnbr <- arrest_tab$neighborhood[grep("narcotics", arrest_tab$incidentOffense, 
+narc.arrests <- arrest_tab$neighborhood[grep("narcotics", arrest_tab$incidentOffense, 
     ignore.case = TRUE)]
-nfreq.narc <- table(nnbr[nnbr != ""])
+narc <- table(narc.arrests[narc.arrests != ""])
 # We want to put these vectors into the same data frame, so let's throw away
 # neighborhoods with no narcotics arrests.
-nfreq <- nfreq[names(nfreq) %in% names(nfreq.narc)]
-df <- data.frame(nfreq)
-df$narc <- nfreq.narc
+total <- total[names(total) %in% names(narc)]
+df <- data.frame(total)
+df$narc <- narc
 # Now we can sort the frame by total number of arrests.
-df <- df[order(df$nfreq, df$narc), ]
-df$nonnarc <- df$nfreq - df$narc
+df <- df[order(df$total, df$narc), ]
+df$nonnarc <- df$total - df$narc
+# We'll get rid of extra variables; everything we need is in the frame.
+rm(total, narc, narc.arrests)
 # And generate a plot of neighborhoods with the most arrests, along with how
-# many of them are for narcotics.  We're copying Hui Miao's code to save and
-# restore graph parameters.
+# many of them are for narcotics.  We looked at Hui Miao's code to find out
+# how to save and restore graph parameters.
 old_par <- par(no.readonly = TRUE)
 par(las = 2, mar = c(4, 9, 3, 2) + 0.1)
-barplot(t(as.matrix(df[df$nfreq > 600, 2:3])), horiz = TRUE, col = c("orange", 
-    "blue"), cex.names = 0.7)
+barplot(t(as.matrix(df[df$total > 600, 2:3])), horiz = TRUE, col = c("orange", 
+    "blue"), cex.names = 0.7, main = "Number of Arrests per Neighborhood--")
 legend(2000, 12, legend = c("narcotics", "non-narcotics"), fill = c("orange", 
     "blue"), cex = 0.7)
 ```
 
-![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges.png) 
+![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges1.png) 
 
 ```r
 par(old_par)
+
+# Using the code above it, we will now create graphics for the 5
+# neighborhoods with the most crime: Downtown, Sandtown-Winchester, Central
+# Park Heights, Broadway East, Belair-Edison
+
+library(plotrix)
+bmoreHoodAnalyze <- function(arg1) {
+    # This function cleans the Baltimore dataset by combining similar crimes and
+    # and graphically depicts the most frequently crimes in an area
+    a <- table(arrest_tab$incidentOffense[arrest_tab$neighborhood == arg1])
+    df <- data.frame(a)
+    
+    # Combine sums Narcotics
+    narcoSum <- sum(df$Freq[df$Var1 == "87O-Narcotics (Outside)" | df$Var1 == 
+        "87-Narcotics"])
+    df$Freq[df$Var1 == "87-Narcotics"] <- narcoSum
+    df <- df[!df$Var1 == "87O-Narcotics (Outside)", ]
+    ## Unlabeled crimes
+    unkSum <- sum(df$Freq[df$Var1 == "Unknown Offense" | df$Var1 == "79-Other"])
+    df$Freq[df$Var1 == "Unknown Offense"] <- unkSum
+    df <- df[!df$Var1 == "79-Other", ]
+    df <- df[!df$Var1 == "Unknown Offense", ]
+    
+    # Concatenate the remainder of the crimes
+    df <- df[order(-df$Freq), ]
+    l <- as.vector(df[, 1])[0:5]
+    freq <- as.vector(df[, 2])[0:5]
+    freq <- c(freq, sum(as.vector(df[, 2])[6:dim(df)[1]]) + unkSum)
+    l <- c(l, "Other")
+    title <- paste0("Distribution of Type of Crime in ", arg1)
+    pie3D(freq, labels = l, explode = 0.2, theta = pi/2.5, labelcex = 0.7, main = title)
+}
+
+
+bmoreHoodAnalyze("Downtown")
 ```
 
+![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges2.png) 
+
+```r
+bmoreHoodAnalyze("Sandtown-Winchester")
+```
+
+![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges3.png) 
+
+```r
+bmoreHoodAnalyze("Central Park Heights")
+```
+
+![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges4.png) 
+
+```r
+bmoreHoodAnalyze("Broadway East")
+```
+
+![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges5.png) 
+
+```r
+bmoreHoodAnalyze("Belair-Edison")
+```
+
+![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges6.png) 
+
+```r
+
+```
+
+What did you observe?:
+
+It is clear from this analysis that narcotics related crimes are the most frequent ones across many neighborhoods in Baltimore.
+
+Unfortunately, the Baltimore database left many entries as "79-Other" or unknown, so specific crimes are hard to correlate.  However, with some cleaning of the data-set, a clear pattern emerged in these problem spots.  After narcotics, the most frequent crime to be encountered would be assault or search/seizure related, followed by towed vehicles.
+
+
+---
+#### Perceptrons: Victoria Cepeda, Ahmed Kosba, Matías Marenchino, Mohamed Gunady
+
+What question are you asking?:
+
+    1. As presented earlier by another team, arrests rate on the weekend is not high as in the middle of the week! Although it was expected for crimes to be more in the weekend. So Why is that?
+
+    2. How is the number of vacant houses correlated with the crime rate in a neighborhood? We are concerned with two types of crimes: 1) Violence-related. 2) Narcotic-related. We obtained a dataset for vacant buildings in Baltimore and used it to plot their locations vs. the geographical distribution of each crime category.
+
+What is the code you use to answer it?:
+
+    Test1: Crimes on the weekend.
+
+```r
+
+# Define two types of crimes: Violence-Related, Narcotic-Related
+narcotics <- c("87-Narcotics", "87O-Narcotics (Outside)", "97-Search & Seizure")
+violentCrimes <- c("102-Questional Death", "104-Malicious Burning", "105-Suspicious Burning", 
+    "115-Trespassing", "1A-Murder", "2A-Rape (Force)", "2B-Rape (Attempt)", 
+    "2D-Statutory Rape", "2G-Sodomy/Perverson", "2J-Other Sex Offn.", "39-Fire", 
+    "3AF-Robb Hwy-Firearm", "3AJF-Robb Carjack-Firearm", "3AJK-Robb Carjack-Knife", 
+    "3AK-Robb Hwy-Knife", "3AO-Robb Hwy-Other Wpn", "3B-Robb Highway (Ua)", 
+    "3BJ-Robb Carjack(Ua)", "3CF-Robb Comm-Firearm", "3CK-Robb Comm-Knife", 
+    "3CO-Robb Comm-Other Wpn", "3D-Robb Comm. (Ua)", "3EF-Robb Gas Station-Firearm", 
+    "3EK-Robb Gas Station-Knife", "3F-Robb Gas Sta. (Ua)", "3GF-Robb Conv Store-Firearm", 
+    "3GK-Robb Conv Store-Knife", "3GO-Robb Conv Store-Other Wpn", "3H-Robb Conv. Stor.(Ua)", 
+    "3JF-Robb Residence-Firearm", "3JK-Robb Residence-Knife", "3JO-Robb Residence-Other Wpn", 
+    "3K-Robb Res. (Ua)", "3LF-Robb Bank-Firearm", "3FO-RObb Bank-Other Wpn", 
+    "3M-Robb Bank (Ua)", "3NF-Robb Misc-Firearm", "3NK-Robb Misc-Knife", "3NO-Robb Misc-Other Wpn", 
+    "3P-Robb Misc. (Ua)", "49-Family Disturbance", "4A-Agg. Asslt.- Gun", "4B-Agg. Asslt.- Cut", 
+    "4C-Agg. Asslt.- Oth.", "4D-Agg. Asslt.- Hand", "4E-Common Assault", "4F-Assault By Threat", 
+    "52A-Animal Cruelty", "56-Missing Person", "75-Destruct. Of Property", "76-Child Abuse-Sexual", 
+    "7A-Stolen Auto")
+
+# Arrest data for the two types of crimes, and crimes with unknown offense
+violent_arrests <- arrest_tab[arrest_tab$incidentOffense %in% violentCrimes, 
+    ]
+narcotic_arrests <- arrest_tab[arrest_tab$incidentOffense %in% narcotics, ]
+unknown_arrests <- arrest_tab[arrest_tab$incidentOffense == "Unknown Offense", 
+    ]
+
+# Histogram function for crimes over the days of week
+hist_dayofweek <- function(dataDates, dataName) {
+    dates = as.Date(dataDates, "%m/%d/%Y")
+    dayofweek <- format(dates, "%a")
+    dayofweek_nums <- as.numeric(format(dates, "%w"))  # numeric version
+    hist(dayofweek_nums, main = paste(dataName, " by Day of Week"), xlab = "Day of Week", 
+        ylab = "Frequency", breaks = -0.5 + 0:7, labels = unique(dayofweek[order(dayofweek_nums)]))
+}
+
+# Plot histogram of violence-related arrests over the week
+hist_dayofweek(violent_arrests$arrestDate, "Violence-Related Arrests")
+```
+
+![plot of chunk Perceptrons-Test1](figure/Perceptrons-Test11.png) 
+
+```r
+# Plot histogram of narcotic-related arrests over the week
+hist_dayofweek(narcotic_arrests$arrestDate, "Narcotic-Related Arrests")
+```
+
+![plot of chunk Perceptrons-Test1](figure/Perceptrons-Test12.png) 
+
+```r
+# Plot histogram of unknown-offense arrests over the week
+hist_dayofweek(unknown_arrests$arrestDate, "Unknown Offense Arrests")
+```
+
+![plot of chunk Perceptrons-Test1](figure/Perceptrons-Test13.png) 
+
+
+    Test2: Vacant buildings vs. Crime areas.
+
+```r
+
+# Prepare the dataset of vacant buildings
+vacant_tab <- read.csv("Vacant_Buildings.csv", stringsAsFactors = FALSE)
+
+# prepare long/lat comlumns
+tmp = gsub("\\)", "", gsub("\\(", "", vacant_tab$Location))
+tmp = strsplit(tmp, split = ",")
+vacant_tab$lon = as.numeric(sapply(tmp, function(x) x[2]))
+vacant_tab$lat = as.numeric(sapply(tmp, function(x) x[1]))
+
+# Plot the geographical distribution of vacant buildings vs. arrests
+library(ggplot2)
+library(ggmap)
+
+# Function to plot datapoints using GoogleMaps API
+plot_map <- function(map, dataPoints, dataPoints2) {
+    googleMap = ggmap(map)
+    googleMap = googleMap + geom_point(data = dataPoints, aes(x = lon, y = lat), 
+        color = "black", alpha = 0.1, size = 3)
+    if (!missing(dataPoints2)) {
+        googleMap = googleMap + geom_point(data = dataPoints2, aes(x = lon, 
+            y = lat), color = "yellow", alpha = 0.1, size = 1.5)
+    }
+    googleMap
+}
+
+# Get Baltimore city map from GoogleMaps
+map = get_map(location = c(lon = -76.62, lat = 39.3), zoom = 12, maptype = "terrain")
+```
+
+```
+## Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=39.3,-76.62&zoom=12&size=%20640x640&scale=%202&maptype=terrain&sensor=false
+## Google Maps API Terms of Service : http://developers.google.com/maps/terms
+```
+
+```r
+
+# Plot violence-related arrests vs. vacant buildings locations
+plot_map(map, violent_arrests, vacant_tab)
+```
+
+```
+## Warning: Removed 2588 rows containing missing values (geom_point).
+```
+
+![plot of chunk Perceptrons-Test2](figure/Perceptrons-Test21.png) 
+
+```r
+# Plot narcotic-related arrests vs. vacant buildings locations
+plot_map(map, narcotic_arrests, vacant_tab)
+```
+
+```
+## Warning: Removed 2744 rows containing missing values (geom_point).
+```
+
+![plot of chunk Perceptrons-Test2](figure/Perceptrons-Test22.png) 
+
+
+What did you observe?:
+
+    1. For Test1: 
+      - As seen from figures, violence-related crimes are high in weekends (with a peak on Saturday) as anticipated.
+      - Both narcotic-related arrests and arrests with unknown-offense have their peak in the middle of the week, with lower rate on weekends.
+      - As the number of records for narcotic-related & unknown offense arrests are much higher than violence-related arrests, that is why the total crime rate has its peak on Wednesday, not in weekends.
+
+    2. For Test2:
+      As predicted, the figures show that the vacant buildings are correlated with the crime rate in a neighborhood, with a bit more correlation with neighborhoods where arrests due to violence occured than the narcotic-related arrests.
+---
