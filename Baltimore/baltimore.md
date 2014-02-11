@@ -664,7 +664,7 @@ par(las = 2, mar = c(5, 7, 4, 2))
 barplot(a$cnt, horiz = TRUE, cex.names = 0.7, names.arg = a$incidentOffense)
 ```
 
-![plot of chunk imoldcat](figure/imoldcat.png) 
+![plot of chunk imoldcat](figure/imoldcat1.png) 
 
 ```r
 
@@ -678,7 +678,7 @@ library(vcd)
 ```
 
 ```
-## Error: there is no package called 'vcd'
+## Loading required package: grid
 ```
 
 ```r
@@ -694,9 +694,7 @@ mosaic(~district + sex + race + incidentOffense, data = filtered, shade = TRUE,
     legend = TRUE)
 ```
 
-```
-## Error: could not find function "mosaic"
-```
+![plot of chunk imoldcat](figure/imoldcat2.png) 
 
 ```r
 par(old_par)
@@ -831,7 +829,7 @@ Unfortunately, the Baltimore database left many entries as "79-Other" or unknown
 
 
 ---
-#### Perceptrons: Victoria Cepeda, Ahmed Kosba, Matías Marenchino, Mohamed Gunady
+#### Perceptrons: Victoria Cepeda, Ahmed Kosba, Mat?as Marenchino, Mohamed Gunady
 
 What question are you asking?:
 
@@ -973,3 +971,85 @@ What did you observe?:
     2. For Q2:
       As predicted, the figures show that the vacant buildings in a neighborhood are correlated with its crime rate, with a bit more correlation with neighborhoods where arrests due to violence occurred than the narcotic-related arrests.
 ---
+
+#### Xiyang Dai
+
+What question are you asking?:
+
+  Q1. Is there a relationship between arrest time and crime type? 
+  
+  Q2. Is there a relationship between arrest time and arrest location (longitude, latitude)?
+
+What is the code you use to answer it?:
+
+
+```r
+library(ggmap)
+library(ggplot2)
+
+# Define function that converts time to numerical value for calculation
+time2num = function(x) {
+    tmp = as.numeric(gsub("\\:", "", x))
+    x = tmp/100 + tmp%%100/60
+}
+
+# Get subtable from the original table
+arrest_tab_tmp1 = subset(arrest_tab, incidentOffense != "", select = c(arrestTime, 
+    incidentOffense))
+arrest_tab_tmp1 = arrest_tab_tmp1[complete.cases(arrest_tab_tmp1), ]
+arrest_tab_tmp1$arrestTime = sapply(arrest_tab_tmp1$arrestTime, time2num)
+
+# Plot the the relationship between arrest time and crime type, reorder them
+# based on the median of arrest time value
+arrest_tab_tmp1$incidentOffense = with(arrest_tab_tmp1, reorder(incidentOffense, 
+    arrestTime, median))
+qplot(factor(arrest_tab_tmp1$incidentOffense), arrest_tab_tmp1$arrestTime, main = "Relationship Between Arrest Time and Crime Type", 
+    xlab = "Crime Type", ylab = "Arrest Time", geom = "boxplot", asp = 2) + 
+    coord_flip()
+```
+
+![plot of chunk Xiyang, Q1](figure/Xiyang__Q1.png) 
+
+
+
+```r
+# Get subtable from the original table
+arrest_tab_tmp2 = subset(arrest_tab, select = c(arrestTime, lon, lat))
+arrest_tab_tmp2 = arrest_tab_tmp2[complete.cases(arrest_tab_tmp2), ]
+arrest_tab_tmp2$arrestTime = sapply(arrest_tab_tmp2$arrestTime, time2num)
+
+# Cut number into bins for color visualization
+rgb_pal = colorRampPalette(c("blue", "green", "red"), bias = 1)
+a_color = rgb_pal(12)[as.numeric(cut(arrest_tab_tmp2$arrestTime, breaks = 12))]
+
+# Get Baltemore map from Google Map
+map = get_map(location = c(lon = -76.62, lat = 39.3), zoom = 12, maptype = "roadmap")
+```
+
+```
+## Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=39.3,-76.62&zoom=12&size=%20640x640&scale=%202&maptype=roadmap&sensor=false
+## Google Maps API Terms of Service : http://developers.google.com/maps/terms
+```
+
+```r
+plt = ggmap(map)
+
+# Visualize arrest time on map
+plt = plt + geom_point(data = arrest_tab_tmp2, aes(x = arrest_tab_tmp2$lon, 
+    y = arrest_tab_tmp2$lat), color = a_color, alpha = 0.2)
+plt = plt + guides(title = "Arrest Time", fill = guide_colorbar())
+print(plt)
+```
+
+```
+## Warning: Removed 61 rows containing missing values (geom_point).
+```
+
+![plot of chunk Xiyang, Q2](figure/Xiyang__Q2.png) 
+
+
+What did you observe?
+
+  Q1: As expected, there is a obvious relationship between arrest time and crime type. From the figure, we can conclude the tendency for specific crime. For example, rob stores or gas stations usually happen in the late night. However, Rob banks usually happen in the afternoon.
+
+  Q2: It seems that there is a relationship between arrest time and arrest location. In places near the downtown, crimes trend to happen in night. In places far from downtown, crimes trend to happen in daytime. But this relationship still needs to be further analyzed commbing with specific geographic features.  
