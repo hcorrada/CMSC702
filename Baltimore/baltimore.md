@@ -235,7 +235,21 @@ Let's make this fancier using the `ggplot2` graphics systems and the `maps` pack
 
 ```r
 library(maps)
+```
+
+```
+## Warning: package 'maps' was built under R version 3.0.2
+```
+
+```r
 library(ggplot2)
+```
+
+```
+## Warning: package 'ggplot2' was built under R version 3.0.2
+```
+
+```r
 
 balto_map = subset(map_data("county", region = "maryland"), subregion == "baltimore city")
 plt = ggplot()
@@ -642,13 +656,7 @@ library(sqldf)
 ```
 
 ```
-## Loading required package: DBI
-## Loading required package: gsubfn
-## Loading required package: proto
-## Loading required namespace: tcltk
-## Loading required package: chron
-## Loading required package: RSQLite
-## Loading required package: RSQLite.extfuns
+## Error: there is no package called 'sqldf'
 ```
 
 ```r
@@ -656,7 +664,7 @@ a = sqldf("select incidentOffense, count(*) as cnt from arrest_tab where inciden
 ```
 
 ```
-## Loading required package: tcltk
+## Error: could not find function "sqldf"
 ```
 
 ```r
@@ -664,7 +672,9 @@ par(las = 2, mar = c(5, 7, 4, 2))
 barplot(a$cnt, horiz = TRUE, cex.names = 0.7, names.arg = a$incidentOffense)
 ```
 
-![plot of chunk imoldcat](figure/imoldcat1.png) 
+```
+## Error: object 'a' not found
+```
 
 ```r
 
@@ -675,6 +685,10 @@ barplot(a$cnt, horiz = TRUE, cex.names = 0.7, names.arg = a$incidentOffense)
 # the correlogram plot to show their correlations in one plot
 
 library(vcd)
+```
+
+```
+## Warning: package 'vcd' was built under R version 3.0.2
 ```
 
 ```
@@ -694,7 +708,7 @@ mosaic(~district + sex + race + incidentOffense, data = filtered, shade = TRUE,
     legend = TRUE)
 ```
 
-![plot of chunk imoldcat](figure/imoldcat2.png) 
+![plot of chunk imoldcat](figure/imoldcat.png) 
 
 ```r
 par(old_par)
@@ -750,7 +764,7 @@ legend(2000, 12, legend = c("narcotics", "non-narcotics"), fill = c("orange",
     "blue"), cex = 0.7)
 ```
 
-![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges1.png) 
+![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges.png) 
 
 ```r
 par(old_par)
@@ -760,6 +774,13 @@ par(old_par)
 # Park Heights, Broadway East, Belair-Edison
 
 library(plotrix)
+```
+
+```
+## Error: there is no package called 'plotrix'
+```
+
+```r
 bmoreHoodAnalyze <- function(arg1) {
     # This function cleans the Baltimore dataset by combining similar crimes and
     # and graphically depicts the most frequently crimes in an area
@@ -791,31 +812,41 @@ bmoreHoodAnalyze <- function(arg1) {
 bmoreHoodAnalyze("Downtown")
 ```
 
-![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges2.png) 
+```
+## Error: could not find function "pie3D"
+```
 
 ```r
 bmoreHoodAnalyze("Sandtown-Winchester")
 ```
 
-![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges3.png) 
+```
+## Error: could not find function "pie3D"
+```
 
 ```r
 bmoreHoodAnalyze("Central Park Heights")
 ```
 
-![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges4.png) 
+```
+## Error: could not find function "pie3D"
+```
 
 ```r
 bmoreHoodAnalyze("Broadway East")
 ```
 
-![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges5.png) 
+```
+## Error: could not find function "pie3D"
+```
 
 ```r
 bmoreHoodAnalyze("Belair-Edison")
 ```
 
-![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges6.png) 
+```
+## Error: could not find function "pie3D"
+```
 
 ```r
 
@@ -915,6 +946,13 @@ vacant_tab$lat = as.numeric(sapply(tmp, function(x) x[1]))
 # Plot the geographical distribution of vacant buildings vs. arrests
 library(ggplot2)
 library(ggmap)
+```
+
+```
+## Warning: package 'ggmap' was built under R version 3.0.2
+```
+
+```r
 
 # Function to plot datapoints using GoogleMaps API
 plot_map <- function(map, dataPoints, dataPoints2) {
@@ -1053,3 +1091,56 @@ What did you observe?
   Q1: As expected, there is a obvious relationship between arrest time and crime type. From the figure, we can conclude the tendency for specific crime. For example, rob stores or gas stations usually happen in the late night. However, Rob banks usually happen in the afternoon.
 
   Q2: It seems that there is a relationship between arrest time and arrest location. In places near the downtown, crimes trend to happen in night. In places far from downtown, crimes trend to happen in daytime. But this relationship still needs to be further analyzed commbing with specific geographic features.  
+  
+---
+
+#### Ruofei Du
+What question are you asking?:
+
+Is there a relationship between top crime types and age of the criminals? For instance, the younger criminals tend to commit more aggressive offence while the older tend to commit more stealthy offence.
+
+What is the code you use to answer it?:
+
+```r
+# Remove the data with unknown offense or other type
+arrestData <- subset(arrest_tab, age > 0 & incidentOffense != "Unknown Offense" & 
+    incidentOffense != "79-Other")
+arrestData <- subset(arrestData, select = c(age, incidentOffense))
+
+# Calculate the frequency of each crime type
+offenseFreq <- table(arrestData$incidentOffense)
+offenseFreq <- sort(offenseFreq, decreasing = TRUE)
+N <- 15
+topN <- data.frame(IncidentOffense = names(offenseFreq[1:N]), Freq = as.integer(offenseFreq[1:N]))
+arrestData$topIncident <- sapply(arrestData$incidentOffense, function(x) {
+    id <- 0
+    for (y in names(offenseFreq[1:N])) {
+        id <- id + 1
+        if (x == y) {
+            return(id)
+        }
+    }
+    return(-1)
+})
+arrestData <- subset(arrestData, arrestData$topIncident != -1)
+# Sort y axis by median of age; sort color by frequency
+arrestData$incidentOffense = with(arrestData, reorder(incidentOffense, age, 
+    median))
+arrestData$topOffense = with(arrestData, reorder(incidentOffense, topIncident, 
+    median))
+Top_15_Offenses <- arrestData$topOffense
+qplot(factor(arrestData$incidentOffense), arrestData$age, main = "Relationship Between Age and Crime Type", 
+    xlab = "Crime Type", ylab = "Age", geom = "boxplot", asp = 2, col = Top_N_Offenses) + 
+    coord_flip()
+```
+
+```
+## Error: object 'Top_N_Offenses' not found
+```
+
+
+What did you observe?:
+
+There's indeed a weak relationship between age and criminal type. The older criminals tend to commit crimes with less violence such as shop lifting and burglary. E.G. the median of shoplifting criminals is of age 40; the younger criminals ten to commit crimes with more violence and sabotage such as trespassing, disorder, destrction of property.
+
+However, the age range of criminals can be adolescents to relatively old poeple. Few people commit destrction of property after the age of 60.
