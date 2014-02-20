@@ -642,13 +642,7 @@ library(sqldf)
 ```
 
 ```
-## Loading required package: DBI
-## Loading required package: gsubfn
-## Loading required package: proto
-## Loading required namespace: tcltk
-## Loading required package: chron
-## Loading required package: RSQLite
-## Loading required package: RSQLite.extfuns
+## Error: there is no package called 'sqldf'
 ```
 
 ```r
@@ -656,7 +650,7 @@ a = sqldf("select incidentOffense, count(*) as cnt from arrest_tab where inciden
 ```
 
 ```
-## Loading required package: tcltk
+## Error: could not find function "sqldf"
 ```
 
 ```r
@@ -664,7 +658,9 @@ par(las = 2, mar = c(5, 7, 4, 2))
 barplot(a$cnt, horiz = TRUE, cex.names = 0.7, names.arg = a$incidentOffense)
 ```
 
-![plot of chunk imoldcat](figure/imoldcat1.png) 
+```
+## Error: object 'a' not found
+```
 
 ```r
 
@@ -678,7 +674,7 @@ library(vcd)
 ```
 
 ```
-## Loading required package: grid
+## Error: there is no package called 'vcd'
 ```
 
 ```r
@@ -694,7 +690,9 @@ mosaic(~district + sex + race + incidentOffense, data = filtered, shade = TRUE,
     legend = TRUE)
 ```
 
-![plot of chunk imoldcat](figure/imoldcat2.png) 
+```
+## Error: could not find function "mosaic"
+```
 
 ```r
 par(old_par)
@@ -915,6 +913,13 @@ vacant_tab$lat = as.numeric(sapply(tmp, function(x) x[1]))
 # Plot the geographical distribution of vacant buildings vs. arrests
 library(ggplot2)
 library(ggmap)
+```
+
+```
+## Error: there is no package called 'ggmap'
+```
+
+```r
 
 # Function to plot datapoints using GoogleMaps API
 plot_map <- function(map, dataPoints, dataPoints2) {
@@ -933,8 +938,7 @@ map = get_map(location = c(lon = -76.62, lat = 39.3), zoom = 12, maptype = "terr
 ```
 
 ```
-## Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=39.3,-76.62&zoom=12&size=%20640x640&scale=%202&maptype=terrain&sensor=false
-## Google Maps API Terms of Service : http://developers.google.com/maps/terms
+## Error: could not find function "get_map"
 ```
 
 ```r
@@ -944,10 +948,8 @@ plot_map(map, violent_arrests, vacant_tab)
 ```
 
 ```
-## Warning: Removed 2588 rows containing missing values (geom_point).
+## Error: could not find function "ggmap"
 ```
-
-![plot of chunk Perceptrons-Test2](figure/Perceptrons-Test21.png) 
 
 ```r
 # Plot narcotic-related arrests vs. vacant buildings locations
@@ -955,10 +957,8 @@ plot_map(map, narcotic_arrests, vacant_tab)
 ```
 
 ```
-## Warning: Removed 2744 rows containing missing values (geom_point).
+## Error: could not find function "ggmap"
 ```
-
-![plot of chunk Perceptrons-Test2](figure/Perceptrons-Test22.png) 
 
 
 What did you observe?:
@@ -985,6 +985,13 @@ What is the code you use to answer it?:
 
 ```r
 library(ggmap)
+```
+
+```
+## Error: there is no package called 'ggmap'
+```
+
+```r
 library(ggplot2)
 
 # Define function that converts time to numerical value for calculation
@@ -1037,12 +1044,18 @@ map = get_map(location = c(lon = -76.62, lat = 39.3), zoom = 12, maptype = "road
 ```
 
 ```
-## Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=39.3,-76.62&zoom=12&size=%20640x640&scale=%202&maptype=roadmap&sensor=false
-## Google Maps API Terms of Service : http://developers.google.com/maps/terms
+## Error: could not find function "get_map"
 ```
 
 ```r
 plt = ggmap(map)
+```
+
+```
+## Error: could not find function "ggmap"
+```
+
+```r
 
 # Visualize arrest time on map
 plt = plt + geom_point(data = arrest_tab_tmp2, aes(x = arrest_tab_tmp2$lon, 
@@ -1052,7 +1065,8 @@ print(plt)
 ```
 
 ```
-## Warning: Removed 61 rows containing missing values (geom_point).
+## Warning: Removed 40636 rows containing missing values (geom_point).
+## Warning: Removed 997 rows containing missing values (geom_point).
 ```
 
 ![plot of chunk Xiyang, Q2](figure/Xiyang__Q2.png) 
@@ -1060,6 +1074,58 @@ print(plt)
 
 What did you observe?
 
-  Q1: As expected, there is a obvious relationship between arrest time and crime type. From the figure, we can conclude the tendency for specific crime. For example, rob stores or gas stations usually happen in the late night. However, Rob banks usually happen in the afternoon.
+Q1: As expected, there is a obvious relationship between arrest time and crime type. From the figure, we can conclude the tendency for specific crime. For example, rob stores or gas stations usually happen in the late night. However, Rob banks usually happen in the afternoon.
 
-  Q2: It seems that there is a relationship between arrest time and arrest location. In places near the downtown, crimes trend to happen in night (Dark red). In places far from downtown, crimes trend to happen in daytime (Light Green). But this relationship still needs to be further analyzed commbing with specific geographic features.  
+Q2: It seems that there is a relationship between arrest time and arrest location. In places near the downtown, crimes trend to happen in night. In places far from downtown, crimes trend to happen in daytime. But this relationship still needs to be further analyzed commbing with specific geographic features.  
+  
+---
+
+#### Ruofei Du
+What question are you asking?:
+
+    Is there a relationship between top crime types and age of the criminals? For instance, the younger criminals tend to commit more aggressive offence while the older tend to commit more stealthy offence.
+
+What is the code you use to answer it?:
+
+```r
+# Remove the data with unknown offense or other type
+arrestData <- subset(arrest_tab, age > 0 & incidentOffense != "Unknown Offense" & 
+    incidentOffense != "79-Other")
+arrestData <- subset(arrestData, select = c(age, incidentOffense))
+
+# Calculate the frequency of each crime type
+offenseFreq <- table(arrestData$incidentOffense)
+offenseFreq <- sort(offenseFreq, decreasing = TRUE)
+N <- 15
+topN <- data.frame(IncidentOffense = names(offenseFreq[1:N]), Freq = as.integer(offenseFreq[1:N]))
+arrestData$topIncident <- sapply(arrestData$incidentOffense, function(x) {
+    id <- 0
+    for (y in names(offenseFreq[1:N])) {
+        id <- id + 1
+        if (x == y) {
+            return(id)
+        }
+    }
+    return(-1)
+})
+arrestData <- subset(arrestData, arrestData$topIncident != -1)
+# Sort y axis by median of age; sort color by frequency
+arrestData$incidentOffense = with(arrestData, reorder(incidentOffense, age, 
+    median))
+arrestData$topOffense = with(arrestData, reorder(incidentOffense, topIncident, 
+    median))
+Top_15_Offenses <- arrestData$topOffense
+qplot(factor(arrestData$incidentOffense), arrestData$age, main = "Relationship Between Age and Crime Type", 
+    xlab = "Crime Type", ylab = "Age", geom = "boxplot", asp = 2, col = Top_15_Offenses) + 
+    coord_flip()
+```
+
+![plot of chunk Ruofei_Du](figure/Ruofei_Du.png) 
+
+
+What did you observe?:
+
+    There's indeed a weak relationship between age and criminal type. The older criminals tend to commit crimes with less violence such as shop lifting and burglary. E.G. the median of shoplifting criminals is of age 40; the younger criminals ten to commit crimes with more violence and sabotage such as trespassing, disorder, destrction of property.
+
+    However, the age range of criminals can be adolescents to relatively old poeple. Few people commit destrction of property after the age of 60.
+
