@@ -642,13 +642,7 @@ library(sqldf)
 ```
 
 ```
-## Loading required package: DBI
-## Loading required package: gsubfn
-## Loading required package: proto
-## Loading required namespace: tcltk
-## Loading required package: chron
-## Loading required package: RSQLite
-## Loading required package: RSQLite.extfuns
+## Error: there is no package called 'sqldf'
 ```
 
 ```r
@@ -656,7 +650,7 @@ a = sqldf("select incidentOffense, count(*) as cnt from arrest_tab where inciden
 ```
 
 ```
-## Loading required package: tcltk
+## Error: could not find function "sqldf"
 ```
 
 ```r
@@ -664,7 +658,9 @@ par(las = 2, mar = c(5, 7, 4, 2))
 barplot(a$cnt, horiz = TRUE, cex.names = 0.7, names.arg = a$incidentOffense)
 ```
 
-![plot of chunk imoldcat](figure/imoldcat1.png) 
+```
+## Error: object 'a' not found
+```
 
 ```r
 
@@ -678,7 +674,7 @@ library(vcd)
 ```
 
 ```
-## Loading required package: grid
+## Error: there is no package called 'vcd'
 ```
 
 ```r
@@ -694,7 +690,9 @@ mosaic(~district + sex + race + incidentOffense, data = filtered, shade = TRUE,
     legend = TRUE)
 ```
 
-![plot of chunk imoldcat](figure/imoldcat2.png) 
+```
+## Error: could not find function "mosaic"
+```
 
 ```r
 par(old_par)
@@ -750,7 +748,7 @@ legend(2000, 12, legend = c("narcotics", "non-narcotics"), fill = c("orange",
     "blue"), cex = 0.7)
 ```
 
-![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges1.png) 
+![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges.png) 
 
 ```r
 par(old_par)
@@ -760,6 +758,13 @@ par(old_par)
 # Park Heights, Broadway East, Belair-Edison
 
 library(plotrix)
+```
+
+```
+## Error: there is no package called 'plotrix'
+```
+
+```r
 bmoreHoodAnalyze <- function(arg1) {
     # This function cleans the Baltimore dataset by combining similar crimes and
     # and graphically depicts the most frequently crimes in an area
@@ -791,31 +796,41 @@ bmoreHoodAnalyze <- function(arg1) {
 bmoreHoodAnalyze("Downtown")
 ```
 
-![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges2.png) 
+```
+## Error: could not find function "pie3D"
+```
 
 ```r
 bmoreHoodAnalyze("Sandtown-Winchester")
 ```
 
-![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges3.png) 
+```
+## Error: could not find function "pie3D"
+```
 
 ```r
 bmoreHoodAnalyze("Central Park Heights")
 ```
 
-![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges4.png) 
+```
+## Error: could not find function "pie3D"
+```
 
 ```r
 bmoreHoodAnalyze("Broadway East")
 ```
 
-![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges5.png) 
+```
+## Error: could not find function "pie3D"
+```
 
 ```r
 bmoreHoodAnalyze("Belair-Edison")
 ```
 
-![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges6.png) 
+```
+## Error: could not find function "pie3D"
+```
 
 ```r
 
@@ -915,6 +930,13 @@ vacant_tab$lat = as.numeric(sapply(tmp, function(x) x[1]))
 # Plot the geographical distribution of vacant buildings vs. arrests
 library(ggplot2)
 library(ggmap)
+```
+
+```
+## Error: there is no package called 'ggmap'
+```
+
+```r
 
 # Function to plot datapoints using GoogleMaps API
 plot_map <- function(map, dataPoints, dataPoints2) {
@@ -933,8 +955,7 @@ map = get_map(location = c(lon = -76.62, lat = 39.3), zoom = 12, maptype = "terr
 ```
 
 ```
-## Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=39.3,-76.62&zoom=12&size=%20640x640&scale=%202&maptype=terrain&sensor=false
-## Google Maps API Terms of Service : http://developers.google.com/maps/terms
+## Error: could not find function "get_map"
 ```
 
 ```r
@@ -944,10 +965,8 @@ plot_map(map, violent_arrests, vacant_tab)
 ```
 
 ```
-## Warning: Removed 2588 rows containing missing values (geom_point).
+## Error: could not find function "ggmap"
 ```
-
-![plot of chunk Perceptrons-Test2](figure/Perceptrons-Test21.png) 
 
 ```r
 # Plot narcotic-related arrests vs. vacant buildings locations
@@ -955,10 +974,8 @@ plot_map(map, narcotic_arrests, vacant_tab)
 ```
 
 ```
-## Warning: Removed 2744 rows containing missing values (geom_point).
+## Error: could not find function "ggmap"
 ```
-
-![plot of chunk Perceptrons-Test2](figure/Perceptrons-Test22.png) 
 
 
 What did you observe?:
@@ -985,6 +1002,13 @@ What is the code you use to answer it?:
 
 ```r
 library(ggmap)
+```
+
+```
+## Error: there is no package called 'ggmap'
+```
+
+```r
 library(ggplot2)
 
 # Define function that converts time to numerical value for calculation
@@ -1027,12 +1051,18 @@ map = get_map(location = c(lon = -76.62, lat = 39.3), zoom = 12, maptype = "road
 ```
 
 ```
-## Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=39.3,-76.62&zoom=12&size=%20640x640&scale=%202&maptype=roadmap&sensor=false
-## Google Maps API Terms of Service : http://developers.google.com/maps/terms
+## Error: could not find function "get_map"
 ```
 
 ```r
 plt = ggmap(map)
+```
+
+```
+## Error: could not find function "ggmap"
+```
+
+```r
 
 # Visualize arrest time on map
 plt = plt + geom_point(data = arrest_tab_tmp2, aes(x = arrest_tab_tmp2$lon, 
@@ -1042,7 +1072,8 @@ print(plt)
 ```
 
 ```
-## Warning: Removed 61 rows containing missing values (geom_point).
+## Warning: Removed 40636 rows containing missing values (geom_point).
+## Warning: Removed 997 rows containing missing values (geom_point).
 ```
 
 ![plot of chunk Xiyang, Q2](figure/Xiyang__Q2.png) 
@@ -1053,3 +1084,81 @@ What did you observe?
   Q1: As expected, there is a obvious relationship between arrest time and crime type. From the figure, we can conclude the tendency for specific crime. For example, rob stores or gas stations usually happen in the late night. However, Rob banks usually happen in the afternoon.
 
   Q2: It seems that there is a relationship between arrest time and arrest location. In places near the downtown, crimes trend to happen in night. In places far from downtown, crimes trend to happen in daytime. But this relationship still needs to be further analyzed commbing with specific geographic features.  
+
+
+#### Will Armstrong
+
+What question are you asking?: Is the difference in arrest numbers between "black" and "white" races due to population demographics?
+
+What is the code you use to answer it?:
+
+
+```r
+#### Plot distribution of race for arrests based on neighborhood, based on code
+#### by Ben Klimowski and Jon Fetter-Degges
+total <- table(arrest_tab$neighborhood[arrest_tab$neighborhood != ""])
+black.arrests <- arrest_tab$neighborhood[arrest_tab$race == "B"]
+black <- table(black.arrests[black.arrests != ""])
+white.arrests <- arrest_tab$neighborhood[arrest_tab$race == "W"]
+white <- table(white.arrests[white.arrests != ""])
+
+# 0-fill unused neighborhoods and resort
+black[names(total)[!(names(total) %in% names(black))]] <- 0
+black <- black[order(names(black))]
+white[names(total)[!(names(total) %in% names(white))]] <- 0
+white <- white[order(names(white))]
+
+# Combine into data frame
+df <- data.frame(total)
+df$black <- black
+df$white <- white
+df <- df[order(df$Freq, df$black, df$white), ]
+df$other <- df$Freq - df$black - df$white
+
+#### Load population demographics
+census_tab <- read.csv("Census_Demographics_2010.csv", stringsAsFactors = FALSE)
+
+grepFun <- function(neighborhood) {
+    ns <- unlist(strsplit(neighborhood, "/"))
+    gr <- grep(ns[1], census_tab$CSA2010)
+    index <- 0
+    if (any(gr)) 
+        index <- gr[1] else if (length(ns) > 1) {
+        gr <- grep(ns[2], census_tab$CSA2010)
+        if (any(gr)) 
+            index <- gr[1]
+    }
+    index
+}
+
+# Look up census information for each neighborhood
+df$census_ind <- apply(as.matrix(df$Var1), 1, grepFun)
+# Remove neighborhoods not found in census
+df <- df[df$census_ind > 0, ]
+df$peraa <- census_tab$peraa10[df$census_ind]
+df$perwhite <- census_tab$perwhite10[df$census_ind]
+df$expected_b <- df$peraa * (df$Freq/100)
+df$expected_w <- df$perwhite * (df$Freq/100)
+
+#### Plot Results
+
+rm(total, black, black.arrests, white, white.arrests, census_tab)
+# Generate a plot of neighborhoods with the racial distribution of, along
+# with points for the expected values.
+old_par <- par(no.readonly = TRUE)
+par(las = 2, mar = c(4, 9, 3, 2) + 0.1)
+toPlot <- df$Freq > 600
+df.bar <- barplot(t(as.matrix(df[toPlot, 3:4])), names.arg = df$Var1[toPlot], 
+    horiz = TRUE, col = c("green", "red"), cex.names = 0.7, main = "Race of Arrests by Neighborhood")
+points(x = df$expected_b[toPlot], y = df.bar, col = "blue", pch = 18)
+points(x = df$expected_w[toPlot] + df$black[toPlot], y = df.bar, col = "black", 
+    pch = 18)
+legend(2000, 5, legend = c("black", "white", "expected black", "expected white"), 
+    fill = c("green", "red", "blue", "black"), cex = 0.7)
+```
+
+![plot of chunk armstrow](figure/armstrow.png) 
+
+What did you observe?
+=======
+Here I am making a big assumption that people tend to get arrested in the same neighborhood in which they live.  Therefore the results may not apply as well in a neighborhood like "Downtown" where more people commute to the neighborhood than live there.  For about half of the listed neighborhoods, black arrests are higher than mere population demographics would predict and white arrests are lower. This could be due to a variety of factors, not least of which is potential racism among the police force.  The other half follow the expected results very well, and Cherry Hill even reverses the finding.  Therefore I conclude that race of arrest is at leasty partially influenced by factors other than from population demographics.
