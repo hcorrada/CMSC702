@@ -1042,9 +1042,19 @@ arrest_tab_tmp2 = subset(arrest_tab, select = c(arrestTime, lon, lat))
 arrest_tab_tmp2 = arrest_tab_tmp2[complete.cases(arrest_tab_tmp2), ]
 arrest_tab_tmp2$arrestTime = sapply(arrest_tab_tmp2$arrestTime, time2num)
 
+# Shift time axis to start at 6am for better representation
+shift_axis_shift = function(x) {
+    if (x < 6) {
+        x = x + 24
+    } else {
+        x = x
+    }
+}
+arrest_tab_tmp2$arrestTime = sapply(arrest_tab_tmp2$arrestTime, shift_axis_shift)
+
 # Cut number into bins for color visualization
-rgb_pal = colorRampPalette(c("blue", "green", "red"), bias = 1)
-a_color = rgb_pal(12)[as.numeric(cut(arrest_tab_tmp2$arrestTime, breaks = 12))]
+rg_pal = colorRampPalette(c(c("light green", "yellow", "red")), bias = 1)
+a_color = rg_pal(12)[as.numeric(cut(arrest_tab_tmp2$arrestTime, breaks = 12))]
 
 # Get Baltemore map from Google Map
 map = get_map(location = c(lon = -76.62, lat = 39.3), zoom = 12, maptype = "roadmap")
@@ -1066,7 +1076,7 @@ plt = ggmap(map)
 
 # Visualize arrest time on map
 plt = plt + geom_point(data = arrest_tab_tmp2, aes(x = arrest_tab_tmp2$lon, 
-    y = arrest_tab_tmp2$lat), color = a_color, alpha = 0.2)
+    y = arrest_tab_tmp2$lat), color = a_color, alpha = 0.1)
 plt = plt + guides(title = "Arrest Time", fill = guide_colorbar())
 print(plt)
 ```
@@ -1081,11 +1091,62 @@ print(plt)
 
 What did you observe?
 
-  Q1: As expected, there is a obvious relationship between arrest time and crime type. From the figure, we can conclude the tendency for specific crime. For example, rob stores or gas stations usually happen in the late night. However, Rob banks usually happen in the afternoon.
+Q1: As expected, there is a obvious relationship between arrest time and crime type. From the figure, we can conclude the tendency for specific crime. For example, rob stores or gas stations usually happen in the late night. However, Rob banks usually happen in the afternoon.
 
-  Q2: It seems that there is a relationship between arrest time and arrest location. In places near the downtown, crimes trend to happen in night. In places far from downtown, crimes trend to happen in daytime. But this relationship still needs to be further analyzed commbing with specific geographic features.  
+Q2: It seems that there is a relationship between arrest time and arrest location. In places near the downtown, crimes trend to happen in night. In places far from downtown, crimes trend to happen in daytime. But this relationship still needs to be further analyzed commbing with specific geographic features.  
+  
+---
+
+#### Ruofei Du
+What question are you asking?:
+
+    Is there a relationship between top crime types and age of the criminals? For instance, the younger criminals tend to commit more aggressive offence while the older tend to commit more stealthy offence.
+
+What is the code you use to answer it?:
+
+```r
+# Remove the data with unknown offense or other type
+arrestData <- subset(arrest_tab, age > 0 & incidentOffense != "Unknown Offense" & 
+    incidentOffense != "79-Other")
+arrestData <- subset(arrestData, select = c(age, incidentOffense))
+
+# Calculate the frequency of each crime type
+offenseFreq <- table(arrestData$incidentOffense)
+offenseFreq <- sort(offenseFreq, decreasing = TRUE)
+N <- 15
+topN <- data.frame(IncidentOffense = names(offenseFreq[1:N]), Freq = as.integer(offenseFreq[1:N]))
+arrestData$topIncident <- sapply(arrestData$incidentOffense, function(x) {
+    id <- 0
+    for (y in names(offenseFreq[1:N])) {
+        id <- id + 1
+        if (x == y) {
+            return(id)
+        }
+    }
+    return(-1)
+})
+arrestData <- subset(arrestData, arrestData$topIncident != -1)
+# Sort y axis by median of age; sort color by frequency
+arrestData$incidentOffense = with(arrestData, reorder(incidentOffense, age, 
+    median))
+arrestData$topOffense = with(arrestData, reorder(incidentOffense, topIncident, 
+    median))
+Top_15_Offenses <- arrestData$topOffense
+qplot(factor(arrestData$incidentOffense), arrestData$age, main = "Relationship Between Age and Crime Type", 
+    xlab = "Crime Type", ylab = "Age", geom = "boxplot", asp = 2, col = Top_15_Offenses) + 
+    coord_flip()
+```
+
+![plot of chunk Ruofei_Du](figure/Ruofei_Du.png) 
 
 
+What did you observe?:
+
+    There's indeed a weak relationship between age and criminal type. The older criminals tend to commit crimes with less violence such as shop lifting and burglary. E.G. the median of shoplifting criminals is of age 40; the younger criminals ten to commit crimes with more violence and sabotage such as trespassing, disorder, destrction of property.
+
+    However, the age range of criminals can be adolescents to relatively old poeple. Few people commit destrction of property after the age of 60.
+
+---
 #### Will Armstrong
 
 What question are you asking?: Is the difference in arrest numbers between "black" and "white" races due to population demographics?
