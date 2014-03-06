@@ -179,10 +179,10 @@ summary(fit)
 ## (Intercept)   33.3878     0.0847   394.1   <2e-16 ***
 ## factor(sex)M  -0.2343     0.0939    -2.5    0.013 *  
 ## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
 ## 
 ## Residual standard error: 11.8 on 104524 degrees of freedom
-## Multiple R-squared:  5.96e-05,	Adjusted R-squared:  5e-05 
+## Multiple R-squared: 5.96e-05,	Adjusted R-squared: 5e-05 
 ## F-statistic: 6.23 on 1 and 104524 DF,  p-value: 0.0126
 ```
 
@@ -235,22 +235,62 @@ Let's make this fancier using the `ggplot2` graphics systems and the `maps` pack
 
 ```r
 library(maps)
+```
+
+```
+## Error: there is no package called 'maps'
+```
+
+```r
 library(ggplot2)
+```
+
+```
+## Error: there is no package called 'ggplot2'
+```
+
+```r
 
 balto_map = subset(map_data("county", region = "maryland"), subregion == "baltimore city")
+```
+
+```
+## Error: could not find function "map_data"
+```
+
+```r
 plt = ggplot()
+```
+
+```
+## Error: could not find function "ggplot"
+```
+
+```r
 plt = plt + geom_polygon(data = balto_map, aes(x = long, y = lat), color = "white", 
     fill = "gray40")
+```
+
+```
+## Error: object 'plt' not found
+```
+
+```r
 plt = plt + geom_point(data = arrest_tab, aes(x = lon, y = lat), color = "blue", 
     alpha = 0.1)
+```
+
+```
+## Error: object 'plt' not found
+```
+
+```r
 print(plt)
 ```
 
 ```
-## Warning: Removed 40636 rows containing missing values (geom_point).
+## Error: object 'plt' not found
 ```
-
-![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-10.png) 
 
 
 Now let's add CCTV cameras.
@@ -263,19 +303,45 @@ cctv_tab$lon = as.numeric(sapply(tmp, function(x) x[2]))
 cctv_tab$lat = as.numeric(sapply(tmp, function(x) x[1]))
 
 plt = ggplot()
+```
+
+```
+## Error: could not find function "ggplot"
+```
+
+```r
 plt = plt + geom_polygon(data = balto_map, aes(x = long, y = lat), color = "white", 
     fill = "gray40")
+```
+
+```
+## Error: object 'plt' not found
+```
+
+```r
 plt = plt + geom_point(data = arrest_tab, aes(x = lon, y = lat), color = "blue", 
     alpha = 0.1)
+```
+
+```
+## Error: object 'plt' not found
+```
+
+```r
 plt = plt + geom_point(data = cctv_tab, aes(x = lon, y = lat), color = "red")
+```
+
+```
+## Error: object 'plt' not found
+```
+
+```r
 print(plt)
 ```
 
 ```
-## Warning: Removed 40636 rows containing missing values (geom_point).
+## Error: object 'plt' not found
 ```
-
-![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-11.png) 
 
 
 ### A challenge
@@ -325,29 +391,87 @@ black = arrest_tab[arrest_tab$race == "B", ]
 white = arrest_tab[arrest_tab$race == "W", ]
 unknown = arrest_tab[arrest_tab$race == "U", ]
 library(maps)
+```
+
+```
+## Error: there is no package called 'maps'
+```
+
+```r
 library(ggplot2)
+```
+
+```
+## Error: there is no package called 'ggplot2'
+```
+
+```r
 balto_map = subset(map_data("county", region = "maryland"), subregion == "baltimore city")
+```
+
+```
+## Error: could not find function "map_data"
+```
+
+```r
 plt = ggplot()
+```
+
+```
+## Error: could not find function "ggplot"
+```
+
+```r
 plt = plt + geom_polygon(data = balto_map, aes(x = long, y = lat), color = "white", 
     fill = "gray40")
+```
+
+```
+## Error: object 'plt' not found
+```
+
+```r
 plt = plt + geom_point(data = asian, aes(x = lon, y = lat), color = "blue", 
     alpha = 0.1)
+```
+
+```
+## Error: object 'plt' not found
+```
+
+```r
 plt = plt + geom_point(data = black, aes(x = lon, y = lat), color = "red", alpha = 0.1)
+```
+
+```
+## Error: object 'plt' not found
+```
+
+```r
 plt = plt + geom_point(data = white, aes(x = lon, y = lat), color = "green", 
     alpha = 0.1)
+```
+
+```
+## Error: object 'plt' not found
+```
+
+```r
 plt = plt + geom_point(data = unknown, aes(x = lon, y = lat), color = "orange", 
     alpha = 0.1)
+```
+
+```
+## Error: object 'plt' not found
+```
+
+```r
 print(plt)
 ```
 
 ```
-## Warning: Removed 93 rows containing missing values (geom_point).
-## Warning: Removed 33454 rows containing missing values (geom_point).
-## Warning: Removed 6251 rows containing missing values (geom_point).
-## Warning: Removed 749 rows containing missing values (geom_point).
+## Error: object 'plt' not found
 ```
-
-![plot of chunk EKrokos](figure/EKrokos.png) 
 
 
 What did you observe?
@@ -493,21 +617,46 @@ violent = c("1A-Murder", "2A-Rape (Force)", "2B-Rape (Attempt)", "3AF-Robb Hwy-F
     "4B-Agg. Asslt.- Cut", "4C-Agg. Asslt.- Oth.", "4D-Agg. Asslt.- Hand")
 
 plt = ggplot()
+```
+
+```
+## Error: could not find function "ggplot"
+```
+
+```r
 plt = plt + geom_polygon(data = balto_map, aes(x = long, y = lat), color = "white", 
     fill = "gray40")
+```
+
+```
+## Error: object 'plt' not found
+```
+
+```r
 plt = plt + geom_point(data = arrest_tab, aes(x = lon, y = lat), color = "blue", 
     alpha = 0.1)
+```
+
+```
+## Error: object 'plt' not found
+```
+
+```r
 plt = plt + geom_point(data = arrest_tab[arrest_tab$incidentOffense %in% violent, 
     ], aes(x = lon, y = lat), color = "red", alpha = 0.2)
+```
+
+```
+## Error: object 'plt' not found
+```
+
+```r
 print(plt)
 ```
 
 ```
-## Warning: Removed 40636 rows containing missing values (geom_point).
-## Warning: Removed 997 rows containing missing values (geom_point).
+## Error: object 'plt' not found
 ```
-
-![plot of chunk RobArgue](figure/RobArgue.png) 
 
 
 What did you observe?
@@ -667,8 +816,8 @@ barplot(a$cnt, horiz = TRUE, cex.names = 0.7, names.arg = a$incidentOffense)
 # as you can see, the most common incident offense is 'Narcotics' (the 1st
 # and 3rd row) next, let's analyze the correlations between 'Narcotics'
 # inccident type and sex, race and district this is a correlation analysis
-# invovling in multiple categorical variables I use a mosaic plot instead of
-# the correlogram plot to show their correlations in one plot
+# invovling in multiple categorical variables I use a mosaic plot instead
+# of the correlogram plot to show their correlations in one plot
 
 library(vcd)
 ```
@@ -720,15 +869,15 @@ What neighborhoods have the highest number of arrests? Of narcotics arrests? Wha
 What is the code you use to answer it?:
 
 ```r
-# We begin by counting the total number of arrest records per neighborhood,
-# throwing out those where the neighborhood is empty.
+# We begin by counting the total number of arrest records per
+# neighborhood, throwing out those where the neighborhood is empty.
 total <- table(arrest_tab$neighborhood[arrest_tab$neighborhood != ""])
 # Now we do it again, using only narcotics arrests.
 narc.arrests <- arrest_tab$neighborhood[grep("narcotics", arrest_tab$incidentOffense, 
     ignore.case = TRUE)]
 narc <- table(narc.arrests[narc.arrests != ""])
-# We want to put these vectors into the same data frame, so let's throw away
-# neighborhoods with no narcotics arrests.
+# We want to put these vectors into the same data frame, so let's throw
+# away neighborhoods with no narcotics arrests.
 total <- total[names(total) %in% names(narc)]
 df <- data.frame(total)
 df$narc <- narc
@@ -737,9 +886,9 @@ df <- df[order(df$total, df$narc), ]
 df$nonnarc <- df$total - df$narc
 # We'll get rid of extra variables; everything we need is in the frame.
 rm(total, narc, narc.arrests)
-# And generate a plot of neighborhoods with the most arrests, along with how
-# many of them are for narcotics.  We looked at Hui Miao's code to find out
-# how to save and restore graph parameters.
+# And generate a plot of neighborhoods with the most arrests, along with
+# how many of them are for narcotics.  We looked at Hui Miao's code to
+# find out how to save and restore graph parameters.
 old_par <- par(no.readonly = TRUE)
 par(las = 2, mar = c(4, 9, 3, 2) + 0.1)
 barplot(t(as.matrix(df[df$total > 600, 2:3])), horiz = TRUE, col = c("orange", 
@@ -748,19 +897,26 @@ legend(2000, 12, legend = c("narcotics", "non-narcotics"), fill = c("orange",
     "blue"), cex = 0.7)
 ```
 
-![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges1.png) 
+![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges.png) 
 
 ```r
 par(old_par)
 
 # Using the code above it, we will now create graphics for the 5
-# neighborhoods with the most crime: Downtown, Sandtown-Winchester, Central
-# Park Heights, Broadway East, Belair-Edison
+# neighborhoods with the most crime: Downtown, Sandtown-Winchester,
+# Central Park Heights, Broadway East, Belair-Edison
 
 library(plotrix)
+```
+
+```
+## Error: there is no package called 'plotrix'
+```
+
+```r
 bmoreHoodAnalyze <- function(arg1) {
-    # This function cleans the Baltimore dataset by combining similar crimes and
-    # and graphically depicts the most frequently crimes in an area
+    # This function cleans the Baltimore dataset by combining similar crimes
+    # and and graphically depicts the most frequently crimes in an area
     a <- table(arrest_tab$incidentOffense[arrest_tab$neighborhood == arg1])
     df <- data.frame(a)
     
@@ -789,31 +945,41 @@ bmoreHoodAnalyze <- function(arg1) {
 bmoreHoodAnalyze("Downtown")
 ```
 
-![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges2.png) 
+```
+## Error: could not find function "paste0"
+```
 
 ```r
 bmoreHoodAnalyze("Sandtown-Winchester")
 ```
 
-![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges3.png) 
+```
+## Error: could not find function "paste0"
+```
 
 ```r
 bmoreHoodAnalyze("Central Park Heights")
 ```
 
-![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges4.png) 
+```
+## Error: could not find function "paste0"
+```
 
 ```r
 bmoreHoodAnalyze("Broadway East")
 ```
 
-![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges5.png) 
+```
+## Error: could not find function "paste0"
+```
 
 ```r
 bmoreHoodAnalyze("Belair-Edison")
 ```
 
-![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges6.png) 
+```
+## Error: could not find function "paste0"
+```
 
 ```r
 
@@ -912,6 +1078,13 @@ vacant_tab$lat = as.numeric(sapply(tmp, function(x) x[1]))
 
 # Plot the geographical distribution of vacant buildings vs. arrests
 library(ggplot2)
+```
+
+```
+## Error: there is no package called 'ggplot2'
+```
+
+```r
 library(ggmap)
 ```
 
@@ -993,6 +1166,13 @@ library(ggmap)
 
 ```r
 library(ggplot2)
+```
+
+```
+## Error: there is no package called 'ggplot2'
+```
+
+```r
 
 # Define function that converts time to numerical value for calculation
 time2num = function(x) {
@@ -1006,8 +1186,8 @@ arrest_tab_tmp1 = subset(arrest_tab, incidentOffense != "", select = c(arrestTim
 arrest_tab_tmp1 = arrest_tab_tmp1[complete.cases(arrest_tab_tmp1), ]
 arrest_tab_tmp1$arrestTime = sapply(arrest_tab_tmp1$arrestTime, time2num)
 
-# Plot the the relationship between arrest time and crime type, reorder them
-# based on the median of arrest time value
+# Plot the the relationship between arrest time and crime type, reorder
+# them based on the median of arrest time value
 arrest_tab_tmp1$incidentOffense = with(arrest_tab_tmp1, reorder(incidentOffense, 
     arrestTime, median))
 qplot(factor(arrest_tab_tmp1$incidentOffense), arrest_tab_tmp1$arrestTime, main = "Relationship Between Arrest Time and Crime Type", 
@@ -1015,7 +1195,9 @@ qplot(factor(arrest_tab_tmp1$incidentOffense), arrest_tab_tmp1$arrestTime, main 
     coord_flip()
 ```
 
-![plot of chunk Xiyang, Q1](figure/Xiyang__Q1.png) 
+```
+## Error: could not find function "qplot"
+```
 
 
 
@@ -1060,16 +1242,27 @@ plt = ggmap(map)
 # Visualize arrest time on map
 plt = plt + geom_point(data = arrest_tab_tmp2, aes(x = arrest_tab_tmp2$lon, 
     y = arrest_tab_tmp2$lat), color = a_color, alpha = 0.1)
+```
+
+```
+## Error: object 'plt' not found
+```
+
+```r
 plt = plt + guides(title = "Arrest Time", fill = guide_colorbar())
+```
+
+```
+## Error: object 'plt' not found
+```
+
+```r
 print(plt)
 ```
 
 ```
-## Warning: Removed 40636 rows containing missing values (geom_point).
-## Warning: Removed 997 rows containing missing values (geom_point).
+## Error: object 'plt' not found
 ```
-
-![plot of chunk Xiyang, Q2](figure/Xiyang__Q2.png) 
 
 
 What did you observe?
@@ -1120,7 +1313,9 @@ qplot(factor(arrestData$incidentOffense), arrestData$age, main = "Relationship B
     coord_flip()
 ```
 
-![plot of chunk Ruofei_Du](figure/Ruofei_Du.png) 
+```
+## Error: could not find function "qplot"
+```
 
 
 What did you observe?:
@@ -1129,3 +1324,135 @@ What did you observe?:
 
     However, the age range of criminals can be adolescents to relatively old poeple. Few people commit destrction of property after the age of 60.
 
+### Bharat and Michael
+
+What question are you asking?
+
+We are looking for information gain between multiple attributes in the dataset. In the following code we analyse the dependencies between age, sex, race, incident location, district, neighborhood, date, and time of arrest. Finally, we plot a graph depicting the relationships between the attributes. The strength of relationship is quantified by the color of the edges, the more red the edges, the greater the strength.
+
+What is the code you used to answer it?
+
+
+```r
+library(FSelector)
+arrest_tab = read.csv("BPD_Arrests.csv", stringsAsFactors = FALSE)
+mod_arrest_tab <- arrest_tab
+notneeded <- c("arrest", "charge", "chargeDescription", "Location.1", "arrestLocation", 
+    "incidentOffense", "post")
+mod_arrest_tab <- mod_arrest_tab[, !(names(mod_arrest_tab) %in% notneeded)]
+mod_arrest_tab$arrestDate <- unlist(lapply(mod_arrest_tab$arrestDate, function(x) substr(x, 
+    1, 2)))
+mod_arrest_tab$arrestTime <- unlist(lapply(mod_arrest_tab$arrestTime, function(x) substr(x, 
+    1, 2)))
+
+wage <- information.gain(age ~ ., mod_arrest_tab)
+wsex <- information.gain(sex ~ ., mod_arrest_tab)
+wrace <- information.gain(race ~ ., mod_arrest_tab)
+wincidentLocation <- information.gain(incidentLocation ~ ., mod_arrest_tab)
+wdistrict <- information.gain(district ~ ., mod_arrest_tab)
+wneighborhood <- information.gain(neighborhood ~ ., mod_arrest_tab)
+warrestDate <- information.gain(arrestDate ~ ., mod_arrest_tab)
+warrestTime <- information.gain(arrestTime ~ ., mod_arrest_tab)
+
+require(igraph)
+```
+
+```
+## Loading required package: igraph
+```
+
+```r
+# 1 - Age 2 - Sex 3 - Race 4 - Incident Location 5 - District 6 -
+# Neighborhood 7 - Date 8 - Time
+g1 <- graph(c(1, 2, 1, 3, 1, 4, 1, 5, 1, 6, 1, 7, 1, 8, 2, 3, 2, 4, 2, 5, 2, 
+    6, 2, 7, 2, 8, 3, 4, 3, 5, 3, 6, 3, 7, 3, 8, 4, 5, 4, 6, 4, 7, 4, 8, 5, 
+    6, 5, 7, 5, 8, 6, 7, 6, 8, 7, 8), directed = FALSE)
+
+V(g1)$label <- c("Age", "Sex", "Race", "IncidentLocation", "District", "Neighborhood", 
+    "ArrestDate", "ArrestTime")
+
+colors = heat.colors(1000)
+
+# set colors for Age node
+E(g1)[1]$color <- colors[999 - as.integer(200 * wage["sex", 1])]
+E(g1)[2]$color <- colors[999 - as.integer(200 * wage["race", 1])]
+E(g1)[3]$color <- colors[999 - as.integer(200 * wage["incidentLocation", 1])]
+E(g1)[4]$color <- colors[999 - as.integer(200 * wage["district", 1])]
+E(g1)[5]$color <- colors[999 - as.integer(200 * wage["neighborhood", 1])]
+E(g1)[6]$color <- colors[999 - as.integer(200 * wage["arrestDate", 1])]
+E(g1)[7]$color <- colors[999 - as.integer(200 * wage["arrestTime", 1])]
+
+# set colors for Sex node
+E(g1)[8]$color <- colors[999 - as.integer(200 * wsex["race", 1])]
+E(g1)[9]$color <- colors[999 - as.integer(200 * wsex["incidentLocation", 1])]
+E(g1)[10]$color <- colors[999 - as.integer(200 * wsex["district", 1])]
+E(g1)[11]$color <- colors[999 - as.integer(200 * wsex["neighborhood", 1])]
+E(g1)[12]$color <- colors[999 - as.integer(200 * wsex["arrestDate", 1])]
+E(g1)[13]$color <- colors[999 - as.integer(200 * wsex["arrestTime", 1])]
+
+# set colors for Race node
+E(g1)[14]$color <- colors[999 - as.integer(200 * wrace["incidentLocation", 1])]
+E(g1)[15]$color <- colors[999 - as.integer(200 * wrace["district", 1])]
+E(g1)[16]$color <- colors[999 - as.integer(200 * wrace["neighborhood", 1])]
+E(g1)[17]$color <- colors[999 - as.integer(200 * wrace["arrestDate", 1])]
+E(g1)[18]$color <- colors[999 - as.integer(200 * wrace["arrestTime", 1])]
+
+E(g1)[19]$color <- colors[999 - as.integer(200 * wincidentLocation["district", 
+    1])]
+E(g1)[20]$color <- colors[999 - as.integer(200 * wincidentLocation["neighborhood", 
+    1])]
+E(g1)[21]$color <- colors[999 - as.integer(200 * wincidentLocation["arrestDate", 
+    1])]
+E(g1)[22]$color <- colors[999 - as.integer(200 * wincidentLocation["arrestTime", 
+    1])]
+
+E(g1)[23]$color <- colors[999 - as.integer(200 * wdistrict["neighborhood", 1])]
+E(g1)[24]$color <- colors[999 - as.integer(200 * wdistrict["arrestDate", 1])]
+E(g1)[25]$color <- colors[999 - as.integer(200 * wdistrict["arrestTime", 1])]
+
+E(g1)[26]$color <- colors[999 - as.integer(200 * wneighborhood["arrestDate", 
+    1])]
+E(g1)[27]$color <- colors[999 - as.integer(200 * wneighborhood["arrestTime", 
+    1])]
+
+E(g1)[28]$color <- colors[999 - as.integer(200 * warrestDate["arrestTime", 1])]
+
+plot(g1)
+```
+
+![plot of chunk Bharat and Michael](figure/Bharat_and_Michael1.png) 
+
+```r
+
+# 1 - Age 2 - Sex 3 - Race 4 - Date 5 - Time
+g2 <- graph(c(1, 2, 1, 3, 1, 4, 1, 5, 2, 3, 2, 4, 2, 5, 3, 4, 3, 5, 4, 5), directed = FALSE)
+
+V(g2)$label <- c("Age", "Sex", "Race", "ArrestDate", "ArrestTime")
+
+# set colors for Age node
+E(g2)[1]$color <- colors[999 - as.integer(60000 * wage["sex", 1])]
+E(g2)[2]$color <- colors[999 - as.integer(60000 * wage["race", 1])]
+E(g2)[3]$color <- colors[999 - as.integer(60000 * wage["arrestDate", 1])]
+E(g2)[4]$color <- colors[999 - as.integer(60000 * wage["arrestTime", 1])]
+
+# set colors for Sex node
+E(g2)[5]$color <- colors[999 - as.integer(60000 * wage["race", 1])]
+E(g2)[6]$color <- colors[999 - as.integer(60000 * wage["arrestDate", 1])]
+E(g2)[7]$color <- colors[999 - as.integer(60000 * wage["arrestTime", 1])]
+
+# set colors for Race node
+E(g2)[8]$color <- colors[999 - as.integer(60000 * wage["arrestDate", 1])]
+E(g2)[9]$color <- colors[999 - as.integer(60000 * wage["arrestTime", 1])]
+
+# set colors for Date node
+E(g2)[9]$color <- colors[999 - as.integer(60000 * wage["arrestTime", 1])]
+
+plot(g2)
+```
+
+![plot of chunk Bharat and Michael](figure/Bharat_and_Michael2.png) 
+
+
+What did you observe?
+
+We observed a strong relationship between atrributes pertaining to location and all other attributes. This should be expected as location is a fairly unique attribute of any arrest, and therefore predictive of other attributes.
