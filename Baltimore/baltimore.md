@@ -642,7 +642,12 @@ library(sqldf)
 ```
 
 ```
-## Error: there is no package called 'sqldf'
+## Loading required package: gsubfn
+## Loading required package: proto
+## Loading required namespace: tcltk
+## Loading required package: RSQLite
+## Loading required package: DBI
+## Loading required package: RSQLite.extfuns
 ```
 
 ```r
@@ -650,7 +655,7 @@ a = sqldf("select incidentOffense, count(*) as cnt from arrest_tab where inciden
 ```
 
 ```
-## Error: could not find function "sqldf"
+## Loading required package: tcltk
 ```
 
 ```r
@@ -658,9 +663,7 @@ par(las = 2, mar = c(5, 7, 4, 2))
 barplot(a$cnt, horiz = TRUE, cex.names = 0.7, names.arg = a$incidentOffense)
 ```
 
-```
-## Error: object 'a' not found
-```
+![plot of chunk imoldcat](figure/imoldcat1.png) 
 
 ```r
 
@@ -674,7 +677,7 @@ library(vcd)
 ```
 
 ```
-## Error: there is no package called 'vcd'
+## Loading required package: grid
 ```
 
 ```r
@@ -690,9 +693,7 @@ mosaic(~district + sex + race + incidentOffense, data = filtered, shade = TRUE,
     legend = TRUE)
 ```
 
-```
-## Error: could not find function "mosaic"
-```
+![plot of chunk imoldcat](figure/imoldcat2.png) 
 
 ```r
 par(old_par)
@@ -1129,3 +1130,100 @@ What did you observe?:
 
     However, the age range of criminals can be adolescents to relatively old poeple. Few people commit destrction of property after the age of 60.
 
+---
+
+#### Shangfu Peng
+What question are you asking?:
+
+    Which types of arrested crimes can benefit from CCTV cameras? Is there any relationship between the number of CCTV cameras and the number of arrests on specific incident offense? In addition, what is the difference of the performance on sex?
+
+What is the code you use to answer it?:
+
+```r
+
+narcotics <- c("87-Narcotics", "87O-Narcotics (Outside)", "97-Search & Seizure")
+violent <- c("1A-Murder", "2A-Rape (Force)", "2B-Rape (Attempt)", "3AF-Robb Hwy-Firearm", 
+    "3AJF-Robb Carjack-Firearm", "3AJK-Robb Carjack-Knife", "3AK-Robb Hwy-Knife", 
+    "3AO-Robb Hwy-Other Wpn", "3CF-Robb Comm-Firearm", "3CK-Robb Comm-Knife", 
+    "3CO-Robb Comm-Other Wpn", "3EF-Robb Gas Station-Firearm", "3EK-Robb Gas Station-Knife", 
+    "3GF-Robb Conv Store-Firearm", "3GK-Robb Conv Store-Knife", "3GO-Robb Conv Store-Other Wpn", 
+    "3JF-Robb Residence-Firearm", "3JK-Robb Residence-Knife", "3JO-Robb Residence-Other Wpn", 
+    "3LF-Robb Bank-Firearm", "3FO-RObb Bank-Other Wpn", "3NF-Robb Misc-Firearm", 
+    "3NK-Robb Misc-Knife", "3NO-Robb Misc-Other Wpn", "4A-Agg. Asslt.- Gun", 
+    "4B-Agg. Asslt.- Cut", "4C-Agg. Asslt.- Oth.", "4D-Agg. Asslt.- Hand")
+
+
+IncidentViaCCTV <- function(offenses, sexual) {
+    subsetvio = subset(arrest_tab, arrest_tab$incidentOffense %in% offenses)
+    if (sexual == "M" || sexual == "F") 
+        subsetsex = subset(subsetvio, subsetvio$sex == sexual) else subsetsex = subsetvio
+    
+    latRange = range(arrest_tab$lat, na.rm = TRUE)
+    lonRange = range(arrest_tab$lon, na.rm = TRUE)
+    latGrid = seq(min(latRange), max(latRange), len = 50)
+    lonGrid = seq(min(lonRange), max(lonRange), len = 50)
+    latFac = as.numeric(cut(subsetsex$lat, breaks = latGrid))
+    lonFac = as.numeric(cut(subsetsex$lon, breaks = lonGrid))
+    
+    gridFac = (latFac - 1) * length(latGrid) + (lonFac - 1)
+    
+    latFac = as.numeric(cut(cctv_tab$lat, breaks = latGrid))
+    lonFac = as.numeric(cut(cctv_tab$lon, breaks = lonGrid))
+    cctvGridFac = (latFac - 1) * length(latGrid) + (lonFac - 1)
+    
+    arrestTab = table(gridFac)
+    cctvTab = table(cctvGridFac)
+    m = match(names(cctvTab), names(arrestTab))
+    plot(arrestTab[m] ~ factor(cctvTab))
+}
+
+IncidentViaCCTV(narcotics, "M")
+```
+
+![plot of chunk Shangfu_Peng](figure/Shangfu_Peng1.png) 
+
+```r
+IncidentViaCCTV(narcotics, "F")
+```
+
+![plot of chunk Shangfu_Peng](figure/Shangfu_Peng2.png) 
+
+```r
+
+IncidentViaCCTV(violent, "M")
+```
+
+![plot of chunk Shangfu_Peng](figure/Shangfu_Peng3.png) 
+
+```r
+IncidentViaCCTV(violent, "F")
+```
+
+![plot of chunk Shangfu_Peng](figure/Shangfu_Peng4.png) 
+
+```r
+
+
+IncidentViaCCTV(c("4E-Common Assault"), "M")
+```
+
+![plot of chunk Shangfu_Peng](figure/Shangfu_Peng5.png) 
+
+```r
+IncidentViaCCTV(c("4E-Common Assault"), "F")
+```
+
+![plot of chunk Shangfu_Peng](figure/Shangfu_Peng6.png) 
+
+
+What did you observe?:
+
+    From previous "challenge" example, we know that the relationship between the number of CCTV cameras and the number of arrests is not obvious. However, I guess that there should be some certain incident offenses that woule benefit from CCTV caremas. (Otherwise, we can give up CCTV caremas.)
+    
+    First I tested on narcotics offenses. It is not influensed by the number of cameras. I guess it is because most people have drug in the houses, such that would not be photoed by cameras.
+    
+    Second I tested on violent crimes. Ignoing the small cases, the number of arrested crimes roughly increases as the number of caremas, especially on female. Obviously, CCTV cameras can catch violent crimes.  
+    
+    Furthermore, I tested on the certain offenses, "4E-Common Assault". The relationship is more obvious. 
+    
+    So using this function, we can know the which types of crimes would benefit from CCTV caremas.
