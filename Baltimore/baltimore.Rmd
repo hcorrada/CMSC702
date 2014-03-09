@@ -806,3 +806,44 @@ legend(2000, 5, legend = c("black", "white", "expected black", "expected white")
 What did you observe?
 =======
 Here I am making a big assumption that people tend to get arrested in the same neighborhood in which they live.  Therefore the results may not apply as well in a neighborhood like "Downtown" where more people commute to the neighborhood than live there.  For about half of the listed neighborhoods, black arrests are higher than mere population demographics would predict and white arrests are lower. This could be due to a variety of factors, not least of which is potential racism among the police force.  The other half follow the expected results very well, and Cherry Hill even reverses the finding.  Therefore I conclude that race of arrest is at leasty partially influenced by factors other than from population demographics.
+
+---
+#### Phil Nguyen
+
+Question: What is the distribution of arrest time for each neighborhood?
+
+Code I use:
+```{r philnguyen}
+# convert arrest time to numeric, e.g. 11:45 -> 11.75
+time.to.num <- function(s) {
+  x <- as.numeric(gsub(":", "", s))
+  (x %/% 100) + (x%%100)/60
+}
+
+# abbreviate district names
+abbrev <- function(s) {
+  gsub("CENTRAL", "C",
+  gsub("EASTERN", "E",
+  gsub("WESTERN", "W",
+  gsub("NORTHERN", "N",
+  gsub("NORTHWESTERN", "NW",
+  gsub("SOUTHEASTERN", "SE",
+  gsub("SOUTHERN", "S",
+  gsub("SOUTHWESTERN", "SW",
+  gsub("NORTHEASTERN", "NE", s)))))))))
+}
+
+# filter out empty districts
+dat <- arrest_tab[arrest_tab$district != "",]
+
+plot(time.to.num(dat$arrestTime) ~ factor(abbrev(dat$district)),
+     xlab="Neighborhood", ylab="Arrest Time")
+
+# earliest and latest arrest time median
+median(time.to.num(dat$arrestTime[dat$district == "NORTHWESTERN"]))
+median(time.to.num(dat$arrestTime[dat$district == "CENTRAL"]))
+```
+
+What I observed: Overall, more than half of the arrests happen between 10AM and 8PM.
+There is no siginificant difference between arrest time in different neighborhoods,
+although arrests happen slightly earlier in central and the southern areas compared to northern areas.
