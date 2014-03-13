@@ -642,7 +642,23 @@ library(sqldf)
 ```
 
 ```
-## Error: there is no package called 'sqldf'
+## Warning: package 'sqldf' was built under R version 3.0.3
+```
+
+```
+## Loading required package: gsubfn
+```
+
+```
+## Warning: package 'gsubfn' was built under R version 3.0.3
+```
+
+```
+## Loading required package: proto
+## Loading required namespace: tcltk
+## Loading required package: RSQLite
+## Loading required package: DBI
+## Loading required package: RSQLite.extfuns
 ```
 
 ```r
@@ -650,7 +666,7 @@ a = sqldf("select incidentOffense, count(*) as cnt from arrest_tab where inciden
 ```
 
 ```
-## Error: could not find function "sqldf"
+## Loading required package: tcltk
 ```
 
 ```r
@@ -658,9 +674,7 @@ par(las = 2, mar = c(5, 7, 4, 2))
 barplot(a$cnt, horiz = TRUE, cex.names = 0.7, names.arg = a$incidentOffense)
 ```
 
-```
-## Error: object 'a' not found
-```
+![plot of chunk imoldcat](figure/imoldcat1.png) 
 
 ```r
 
@@ -674,7 +688,11 @@ library(vcd)
 ```
 
 ```
-## Error: there is no package called 'vcd'
+## Warning: package 'vcd' was built under R version 3.0.3
+```
+
+```
+## Loading required package: grid
 ```
 
 ```r
@@ -690,9 +708,7 @@ mosaic(~district + sex + race + incidentOffense, data = filtered, shade = TRUE,
     legend = TRUE)
 ```
 
-```
-## Error: could not find function "mosaic"
-```
+![plot of chunk imoldcat](figure/imoldcat2.png) 
 
 ```r
 par(old_par)
@@ -933,7 +949,7 @@ library(ggmap)
 ```
 
 ```
-## Error: there is no package called 'ggmap'
+## Warning: package 'ggmap' was built under R version 3.0.3
 ```
 
 ```r
@@ -955,7 +971,8 @@ map = get_map(location = c(lon = -76.62, lat = 39.3), zoom = 12, maptype = "terr
 ```
 
 ```
-## Error: could not find function "get_map"
+## Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=39.3,-76.62&zoom=12&size=%20640x640&scale=%202&maptype=terrain&sensor=false
+## Google Maps API Terms of Service : http://developers.google.com/maps/terms
 ```
 
 ```r
@@ -965,8 +982,10 @@ plot_map(map, violent_arrests, vacant_tab)
 ```
 
 ```
-## Error: could not find function "ggmap"
+## Warning: Removed 2588 rows containing missing values (geom_point).
 ```
+
+![plot of chunk Perceptrons-Test2](figure/Perceptrons-Test21.png) 
 
 ```r
 # Plot narcotic-related arrests vs. vacant buildings locations
@@ -974,8 +993,10 @@ plot_map(map, narcotic_arrests, vacant_tab)
 ```
 
 ```
-## Error: could not find function "ggmap"
+## Warning: Removed 2744 rows containing missing values (geom_point).
 ```
+
+![plot of chunk Perceptrons-Test2](figure/Perceptrons-Test22.png) 
 
 
 What did you observe?:
@@ -1002,13 +1023,6 @@ What is the code you use to answer it?:
 
 ```r
 library(ggmap)
-```
-
-```
-## Error: there is no package called 'ggmap'
-```
-
-```r
 library(ggplot2)
 
 # Define function that converts time to numerical value for calculation
@@ -1061,18 +1075,12 @@ map = get_map(location = c(lon = -76.62, lat = 39.3), zoom = 12, maptype = "road
 ```
 
 ```
-## Error: could not find function "get_map"
+## Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=39.3,-76.62&zoom=12&size=%20640x640&scale=%202&maptype=roadmap&sensor=false
+## Google Maps API Terms of Service : http://developers.google.com/maps/terms
 ```
 
 ```r
 plt = ggmap(map)
-```
-
-```
-## Error: could not find function "ggmap"
-```
-
-```r
 
 # Visualize arrest time on map
 plt = plt + geom_point(data = arrest_tab_tmp2, aes(x = arrest_tab_tmp2$lon, 
@@ -1082,8 +1090,7 @@ print(plt)
 ```
 
 ```
-## Warning: Removed 40636 rows containing missing values (geom_point).
-## Warning: Removed 997 rows containing missing values (geom_point).
+## Warning: Removed 61 rows containing missing values (geom_point).
 ```
 
 ![plot of chunk Xiyang, Q2](figure/Xiyang__Q2.png) 
@@ -1223,3 +1230,81 @@ legend(2000, 5, legend = c("black", "white", "expected black", "expected white")
 What did you observe?
 =======
 Here I am making a big assumption that people tend to get arrested in the same neighborhood in which they live.  Therefore the results may not apply as well in a neighborhood like "Downtown" where more people commute to the neighborhood than live there.  For about half of the listed neighborhoods, black arrests are higher than mere population demographics would predict and white arrests are lower. This could be due to a variety of factors, not least of which is potential racism among the police force.  The other half follow the expected results very well, and Cherry Hill even reverses the finding.  Therefore I conclude that race of arrest is at leasty partially influenced by factors other than from population demographics.
+
+
+---
+### Hao Li
+What question are you asking?: 
+
+Q1: I heared the area around the Johns Hopkins University is not safe. Is that true?
+Q1: Where is the best place to live around JHU?
+  
+What is the code you use to answer it?:
+
+
+```r
+library(ggplot2)
+library(ggmap)
+
+# Function to plot datapoints using GoogleMaps API
+plot_map <- function(center, square) {
+    map = ggmap(get_map(location = center, zoom = 14, maptype = "roadmap"))
+    map = map + geom_point(data = arrest_tab, aes(x = lon, y = lat), color = "red", 
+        alpha = 0.1, size = 2)
+    map = map + geom_rect(aes(xmin = square[1], xmax = square[2], ymin = square[3], 
+        ymax = square[4]), color = "yellow", alpha = 0.05)
+    map
+}
+
+# JHU Homewood campus
+center = c(lon = -76.620644, lat = 39.329522)
+square = c(-76.624283, -76.617685, 39.324571, 39.335874)  # bounding box of the campus
+map = plot_map(center, square)
+```
+
+```
+## Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=39.329522,-76.620644&zoom=14&size=%20640x640&scale=%202&maptype=roadmap&sensor=false
+## Google Maps API Terms of Service : http://developers.google.com/maps/terms
+```
+
+```r
+map = map + geom_leg(aes(x = -76.609546, y = 39.339051, xend = -76.609504, yend = 39.315514), 
+    colour = "blue", alpha = 0.1, size = 2)
+map
+```
+
+```
+## Warning: Removed 96502 rows containing missing values (geom_point).
+```
+
+![plot of chunk unnamed-chunk-13](figure/unnamed-chunk-131.png) 
+
+```r
+
+# JHU School of Medicine
+center = c(lon = -76.588595, lat = 39.298584)
+square = c(-76.59735, -76.58793, 39.293952, 39.300777)  # bounding box of the campus
+map = plot_map(center, square)
+```
+
+```
+## Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=39.298584,-76.588595&zoom=14&size=%20640x640&scale=%202&maptype=roadmap&sensor=false
+## Google Maps API Terms of Service : http://developers.google.com/maps/terms
+```
+
+```r
+map
+```
+
+```
+## Warning: Removed 88292 rows containing missing values (geom_point).
+```
+
+![plot of chunk unnamed-chunk-13](figure/unnamed-chunk-132.png) 
+
+
+What did you observe?:
+
+1. The area around the Homewood campus(main campus) of JHU is relatively safe comparing to the campus of JHU School of Medicine locates, which locates in downtown and has higher crime density.
+
+2. It is interesting to see that there is clear contrast between the west and the east of Greenmount Road(blue line) near the Homewood campus and there are quite few crimes in the north of the campus, which could be a safe neighborhood to live. If you attend the school of medicine, it's better to live elsewhere and take the shuttle:)
