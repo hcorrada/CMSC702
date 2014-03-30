@@ -642,25 +642,23 @@ library(sqldf)
 ```
 
 ```
-## Error: there is no package called 'sqldf'
+## Loading required package: DBI
+## Loading required package: gsubfn
+## Loading required package: proto
+## Loading required namespace: tcltk
+## Could not load tcltk.  Will use slower R code instead.
+## Loading required package: chron
+## Loading required package: RSQLite
+## Loading required package: RSQLite.extfuns
 ```
 
 ```r
 a = sqldf("select incidentOffense, count(*) as cnt from arrest_tab where incidentOffense != 'Unknown Offense' group by incidentOffense having cnt >= 200 order by cnt")
-```
-
-```
-## Error: could not find function "sqldf"
-```
-
-```r
 par(las = 2, mar = c(5, 7, 4, 2))
 barplot(a$cnt, horiz = TRUE, cex.names = 0.7, names.arg = a$incidentOffense)
 ```
 
-```
-## Error: object 'a' not found
-```
+![plot of chunk imoldcat](figure/imoldcat1.png) 
 
 ```r
 
@@ -674,7 +672,7 @@ library(vcd)
 ```
 
 ```
-## Error: there is no package called 'vcd'
+## Loading required package: grid
 ```
 
 ```r
@@ -690,9 +688,7 @@ mosaic(~district + sex + race + incidentOffense, data = filtered, shade = TRUE,
     legend = TRUE)
 ```
 
-```
-## Error: could not find function "mosaic"
-```
+![plot of chunk imoldcat](figure/imoldcat2.png) 
 
 ```r
 par(old_par)
@@ -748,7 +744,7 @@ legend(2000, 12, legend = c("narcotics", "non-narcotics"), fill = c("orange",
     "blue"), cex = 0.7)
 ```
 
-![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges.png) 
+![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges1.png) 
 
 ```r
 par(old_par)
@@ -758,13 +754,6 @@ par(old_par)
 # Park Heights, Broadway East, Belair-Edison
 
 library(plotrix)
-```
-
-```
-## Error: there is no package called 'plotrix'
-```
-
-```r
 bmoreHoodAnalyze <- function(arg1) {
     # This function cleans the Baltimore dataset by combining similar crimes and
     # and graphically depicts the most frequently crimes in an area
@@ -796,41 +785,31 @@ bmoreHoodAnalyze <- function(arg1) {
 bmoreHoodAnalyze("Downtown")
 ```
 
-```
-## Error: could not find function "pie3D"
-```
+![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges2.png) 
 
 ```r
 bmoreHoodAnalyze("Sandtown-Winchester")
 ```
 
-```
-## Error: could not find function "pie3D"
-```
+![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges3.png) 
 
 ```r
 bmoreHoodAnalyze("Central Park Heights")
 ```
 
-```
-## Error: could not find function "pie3D"
-```
+![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges4.png) 
 
 ```r
 bmoreHoodAnalyze("Broadway East")
 ```
 
-```
-## Error: could not find function "pie3D"
-```
+![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges5.png) 
 
 ```r
 bmoreHoodAnalyze("Belair-Edison")
 ```
 
-```
-## Error: could not find function "pie3D"
-```
+![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges6.png) 
 
 ```r
 
@@ -930,13 +909,6 @@ vacant_tab$lat = as.numeric(sapply(tmp, function(x) x[1]))
 # Plot the geographical distribution of vacant buildings vs. arrests
 library(ggplot2)
 library(ggmap)
-```
-
-```
-## Error: there is no package called 'ggmap'
-```
-
-```r
 
 # Function to plot datapoints using GoogleMaps API
 plot_map <- function(map, dataPoints, dataPoints2) {
@@ -955,7 +927,8 @@ map = get_map(location = c(lon = -76.62, lat = 39.3), zoom = 12, maptype = "terr
 ```
 
 ```
-## Error: could not find function "get_map"
+## Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=39.3,-76.62&zoom=12&size=%20640x640&scale=%202&maptype=terrain&sensor=false
+## Google Maps API Terms of Service : http://developers.google.com/maps/terms
 ```
 
 ```r
@@ -965,8 +938,10 @@ plot_map(map, violent_arrests, vacant_tab)
 ```
 
 ```
-## Error: could not find function "ggmap"
+## Warning: Removed 2588 rows containing missing values (geom_point).
 ```
+
+![plot of chunk Perceptrons-Test2](figure/Perceptrons-Test21.png) 
 
 ```r
 # Plot narcotic-related arrests vs. vacant buildings locations
@@ -974,8 +949,10 @@ plot_map(map, narcotic_arrests, vacant_tab)
 ```
 
 ```
-## Error: could not find function "ggmap"
+## Warning: Removed 2744 rows containing missing values (geom_point).
 ```
+
+![plot of chunk Perceptrons-Test2](figure/Perceptrons-Test22.png) 
 
 
 What did you observe?:
@@ -1002,13 +979,6 @@ What is the code you use to answer it?:
 
 ```r
 library(ggmap)
-```
-
-```
-## Error: there is no package called 'ggmap'
-```
-
-```r
 library(ggplot2)
 
 # Define function that converts time to numerical value for calculation
@@ -1061,18 +1031,12 @@ map = get_map(location = c(lon = -76.62, lat = 39.3), zoom = 12, maptype = "road
 ```
 
 ```
-## Error: could not find function "get_map"
+## Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=39.3,-76.62&zoom=12&size=%20640x640&scale=%202&maptype=roadmap&sensor=false
+## Google Maps API Terms of Service : http://developers.google.com/maps/terms
 ```
 
 ```r
 plt = ggmap(map)
-```
-
-```
-## Error: could not find function "ggmap"
-```
-
-```r
 
 # Visualize arrest time on map
 plt = plt + geom_point(data = arrest_tab_tmp2, aes(x = arrest_tab_tmp2$lon, 
@@ -1082,8 +1046,7 @@ print(plt)
 ```
 
 ```
-## Warning: Removed 40636 rows containing missing values (geom_point).
-## Warning: Removed 997 rows containing missing values (geom_point).
+## Warning: Removed 61 rows containing missing values (geom_point).
 ```
 
 ![plot of chunk Xiyang, Q2](figure/Xiyang__Q2.png) 
