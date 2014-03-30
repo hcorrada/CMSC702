@@ -197,6 +197,13 @@ First we need to extract latitude and longitude from location, we'll use some st
 
 ```r
 tmp = gsub("\\)", "", gsub("\\(", "", arrest_tab$Location))
+```
+
+```
+## Warning: Name partially matched in data frame
+```
+
+```r
 tmp = strsplit(tmp, split = ",")
 arrest_tab$lon = as.numeric(sapply(tmp, function(x) x[2]))
 arrest_tab$lat = as.numeric(sapply(tmp, function(x) x[1]))
@@ -258,6 +265,13 @@ Now let's add CCTV cameras.
 
 ```r
 tmp = gsub("\\)", "", gsub("\\(", "", cctv_tab$Location))
+```
+
+```
+## Warning: Name partially matched in data frame
+```
+
+```r
 tmp = strsplit(tmp, split = ",")
 cctv_tab$lon = as.numeric(sapply(tmp, function(x) x[2]))
 cctv_tab$lat = as.numeric(sapply(tmp, function(x) x[1]))
@@ -537,6 +551,13 @@ arrestTmp <- subset(arrest_tab, arrest_tab$age != 0)
 
 # extract geo info
 tmp <- gsub("\\).*", "", gsub(".*\\(", "", arrestTmp$Location))
+```
+
+```
+## Warning: Name partially matched in data frame
+```
+
+```r
 tmp = strsplit(tmp, split = ",")
 arrestTmp$lat <- as.numeric(sapply(tmp, function(x) x[2]))
 arrestTmp$lon <- as.numeric(sapply(tmp, function(x) x[1]))
@@ -642,13 +663,8 @@ library(sqldf)
 ```
 
 ```
-## Loading required package: DBI
-## Loading required package: gsubfn
-## Loading required package: proto
-## Loading required namespace: tcltk
-## Could not load tcltk.  Will use slower R code instead.
-## Loading required package: chron
 ## Loading required package: RSQLite
+## Loading required package: DBI
 ## Loading required package: RSQLite.extfuns
 ```
 
@@ -658,7 +674,7 @@ par(las = 2, mar = c(5, 7, 4, 2))
 barplot(a$cnt, horiz = TRUE, cex.names = 0.7, names.arg = a$incidentOffense)
 ```
 
-![plot of chunk imoldcat](figure/imoldcat1.png) 
+![plot of chunk imoldcat](figure/imoldcat.png) 
 
 ```r
 
@@ -672,7 +688,7 @@ library(vcd)
 ```
 
 ```
-## Loading required package: grid
+## Error: there is no package called 'vcd'
 ```
 
 ```r
@@ -688,7 +704,9 @@ mosaic(~district + sex + race + incidentOffense, data = filtered, shade = TRUE,
     legend = TRUE)
 ```
 
-![plot of chunk imoldcat](figure/imoldcat2.png) 
+```
+## Error: could not find function "mosaic"
+```
 
 ```r
 par(old_par)
@@ -744,7 +762,7 @@ legend(2000, 12, legend = c("narcotics", "non-narcotics"), fill = c("orange",
     "blue"), cex = 0.7)
 ```
 
-![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges1.png) 
+![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges.png) 
 
 ```r
 par(old_par)
@@ -754,6 +772,13 @@ par(old_par)
 # Park Heights, Broadway East, Belair-Edison
 
 library(plotrix)
+```
+
+```
+## Error: there is no package called 'plotrix'
+```
+
+```r
 bmoreHoodAnalyze <- function(arg1) {
     # This function cleans the Baltimore dataset by combining similar crimes and
     # and graphically depicts the most frequently crimes in an area
@@ -785,31 +810,41 @@ bmoreHoodAnalyze <- function(arg1) {
 bmoreHoodAnalyze("Downtown")
 ```
 
-![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges2.png) 
+```
+## Error: could not find function "pie3D"
+```
 
 ```r
 bmoreHoodAnalyze("Sandtown-Winchester")
 ```
 
-![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges3.png) 
+```
+## Error: could not find function "pie3D"
+```
 
 ```r
 bmoreHoodAnalyze("Central Park Heights")
 ```
 
-![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges4.png) 
+```
+## Error: could not find function "pie3D"
+```
 
 ```r
 bmoreHoodAnalyze("Broadway East")
 ```
 
-![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges5.png) 
+```
+## Error: could not find function "pie3D"
+```
 
 ```r
 bmoreHoodAnalyze("Belair-Edison")
 ```
 
-![plot of chunk Klimkowski_and_Fetter_Degges](figure/Klimkowski_and_Fetter_Degges6.png) 
+```
+## Error: could not find function "pie3D"
+```
 
 ```r
 
@@ -902,6 +937,13 @@ vacant_tab <- read.csv("Vacant_Buildings.csv", stringsAsFactors = FALSE)
 
 # prepare long/lat comlumns
 tmp = gsub("\\)", "", gsub("\\(", "", vacant_tab$Location))
+```
+
+```
+## Warning: Name partially matched in data frame
+```
+
+```r
 tmp = strsplit(tmp, split = ",")
 vacant_tab$lon = as.numeric(sapply(tmp, function(x) x[2]))
 vacant_tab$lat = as.numeric(sapply(tmp, function(x) x[1]))
@@ -909,6 +951,13 @@ vacant_tab$lat = as.numeric(sapply(tmp, function(x) x[1]))
 # Plot the geographical distribution of vacant buildings vs. arrests
 library(ggplot2)
 library(ggmap)
+```
+
+```
+## Error: there is no package called 'ggmap'
+```
+
+```r
 
 # Function to plot datapoints using GoogleMaps API
 plot_map <- function(map, dataPoints, dataPoints2) {
@@ -927,8 +976,7 @@ map = get_map(location = c(lon = -76.62, lat = 39.3), zoom = 12, maptype = "terr
 ```
 
 ```
-## Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=39.3,-76.62&zoom=12&size=%20640x640&scale=%202&maptype=terrain&sensor=false
-## Google Maps API Terms of Service : http://developers.google.com/maps/terms
+## Error: could not find function "get_map"
 ```
 
 ```r
@@ -938,10 +986,8 @@ plot_map(map, violent_arrests, vacant_tab)
 ```
 
 ```
-## Warning: Removed 2588 rows containing missing values (geom_point).
+## Error: could not find function "ggmap"
 ```
-
-![plot of chunk Perceptrons-Test2](figure/Perceptrons-Test21.png) 
 
 ```r
 # Plot narcotic-related arrests vs. vacant buildings locations
@@ -949,10 +995,8 @@ plot_map(map, narcotic_arrests, vacant_tab)
 ```
 
 ```
-## Warning: Removed 2744 rows containing missing values (geom_point).
+## Error: could not find function "ggmap"
 ```
-
-![plot of chunk Perceptrons-Test2](figure/Perceptrons-Test22.png) 
 
 
 What did you observe?:
@@ -979,6 +1023,13 @@ What is the code you use to answer it?:
 
 ```r
 library(ggmap)
+```
+
+```
+## Error: there is no package called 'ggmap'
+```
+
+```r
 library(ggplot2)
 
 # Define function that converts time to numerical value for calculation
@@ -1031,12 +1082,18 @@ map = get_map(location = c(lon = -76.62, lat = 39.3), zoom = 12, maptype = "road
 ```
 
 ```
-## Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=39.3,-76.62&zoom=12&size=%20640x640&scale=%202&maptype=roadmap&sensor=false
-## Google Maps API Terms of Service : http://developers.google.com/maps/terms
+## Error: could not find function "get_map"
 ```
 
 ```r
 plt = ggmap(map)
+```
+
+```
+## Error: could not find function "ggmap"
+```
+
+```r
 
 # Visualize arrest time on map
 plt = plt + geom_point(data = arrest_tab_tmp2, aes(x = arrest_tab_tmp2$lon, 
@@ -1046,7 +1103,8 @@ print(plt)
 ```
 
 ```
-## Warning: Removed 61 rows containing missing values (geom_point).
+## Warning: Removed 40636 rows containing missing values (geom_point).
+## Warning: Removed 997 rows containing missing values (geom_point).
 ```
 
 ![plot of chunk Xiyang, Q2](figure/Xiyang__Q2.png) 
@@ -1162,7 +1220,21 @@ df <- df[df$census_ind > 0, ]
 df$peraa <- census_tab$peraa10[df$census_ind]
 df$perwhite <- census_tab$perwhite10[df$census_ind]
 df$expected_b <- df$peraa * (df$Freq/100)
+```
+
+```
+## Error: non-numeric argument to binary operator
+```
+
+```r
 df$expected_w <- df$perwhite * (df$Freq/100)
+```
+
+```
+## Error: non-numeric argument to binary operator
+```
+
+```r
 
 #### Plot Results
 
@@ -1175,8 +1247,22 @@ toPlot <- df$Freq > 600
 df.bar <- barplot(t(as.matrix(df[toPlot, 3:4])), names.arg = df$Var1[toPlot], 
     horiz = TRUE, col = c("green", "red"), cex.names = 0.7, main = "Race of Arrests by Neighborhood")
 points(x = df$expected_b[toPlot], y = df.bar, col = "blue", pch = 18)
+```
+
+```
+## Error: 'x' and 'y' lengths differ
+```
+
+```r
 points(x = df$expected_w[toPlot] + df$black[toPlot], y = df.bar, col = "black", 
     pch = 18)
+```
+
+```
+## Error: 'x' and 'y' lengths differ
+```
+
+```r
 legend(2000, 5, legend = c("black", "white", "expected black", "expected white"), 
     fill = c("green", "red", "blue", "black"), cex = 0.7)
 ```
@@ -1199,13 +1285,6 @@ What is the code you used to answer it?
 
 ```r
 library(FSelector)
-```
-
-```
-## Error: there is no package called 'FSelector'
-```
-
-```r
 arrest_tab = read.csv("BPD_Arrests.csv", stringsAsFactors = FALSE)
 mod_arrest_tab <- arrest_tab
 notneeded <- c("arrest", "charge", "chargeDescription", "Location.1", "arrestLocation", 
@@ -1217,69 +1296,13 @@ mod_arrest_tab$arrestTime <- unlist(lapply(mod_arrest_tab$arrestTime, function(x
     1, 2)))
 
 wage <- information.gain(age ~ ., mod_arrest_tab)
-```
-
-```
-## Error: could not find function "information.gain"
-```
-
-```r
 wsex <- information.gain(sex ~ ., mod_arrest_tab)
-```
-
-```
-## Error: could not find function "information.gain"
-```
-
-```r
 wrace <- information.gain(race ~ ., mod_arrest_tab)
-```
-
-```
-## Error: could not find function "information.gain"
-```
-
-```r
 wincidentLocation <- information.gain(incidentLocation ~ ., mod_arrest_tab)
-```
-
-```
-## Error: could not find function "information.gain"
-```
-
-```r
 wdistrict <- information.gain(district ~ ., mod_arrest_tab)
-```
-
-```
-## Error: could not find function "information.gain"
-```
-
-```r
 wneighborhood <- information.gain(neighborhood ~ ., mod_arrest_tab)
-```
-
-```
-## Error: could not find function "information.gain"
-```
-
-```r
 warrestDate <- information.gain(arrestDate ~ ., mod_arrest_tab)
-```
-
-```
-## Error: could not find function "information.gain"
-```
-
-```r
 warrestTime <- information.gain(arrestTime ~ ., mod_arrest_tab)
-```
-
-```
-## Error: could not find function "information.gain"
-```
-
-```r
 
 require(igraph)
 ```
@@ -1288,15 +1311,33 @@ require(igraph)
 ## Loading required package: igraph
 ```
 
+```
+## Warning: there is no package called 'igraph'
+```
+
 ```r
 # 1 - Age 2 - Sex 3 - Race 4 - Incident Location 5 - District 6 -
 # Neighborhood 7 - Date 8 - Time
 g1 <- graph(c(1, 2, 1, 3, 1, 4, 1, 5, 1, 6, 1, 7, 1, 8, 2, 3, 2, 4, 2, 5, 2, 
     6, 2, 7, 2, 8, 3, 4, 3, 5, 3, 6, 3, 7, 3, 8, 4, 5, 4, 6, 4, 7, 4, 8, 5, 
     6, 5, 7, 5, 8, 6, 7, 6, 8, 7, 8), directed = FALSE)
+```
+
+```
+## Error: could not find function "graph"
+```
+
+```r
 
 V(g1)$label <- c("Age", "Sex", "Race", "IncidentLocation", "District", "Neighborhood", 
     "ArrestDate", "ArrestTime")
+```
+
+```
+## Error: object 'g1' not found
+```
+
+```r
 
 colors = heat.colors(1000)
 
@@ -1305,7 +1346,7 @@ E(g1)[1]$color <- colors[999 - as.integer(200 * wage["sex", 1])]
 ```
 
 ```
-## Error: object 'wage' not found
+## Error: object 'g1' not found
 ```
 
 ```r
@@ -1313,7 +1354,7 @@ E(g1)[2]$color <- colors[999 - as.integer(200 * wage["race", 1])]
 ```
 
 ```
-## Error: object 'wage' not found
+## Error: object 'g1' not found
 ```
 
 ```r
@@ -1321,7 +1362,7 @@ E(g1)[3]$color <- colors[999 - as.integer(200 * wage["incidentLocation", 1])]
 ```
 
 ```
-## Error: object 'wage' not found
+## Error: object 'g1' not found
 ```
 
 ```r
@@ -1329,7 +1370,7 @@ E(g1)[4]$color <- colors[999 - as.integer(200 * wage["district", 1])]
 ```
 
 ```
-## Error: object 'wage' not found
+## Error: object 'g1' not found
 ```
 
 ```r
@@ -1337,7 +1378,7 @@ E(g1)[5]$color <- colors[999 - as.integer(200 * wage["neighborhood", 1])]
 ```
 
 ```
-## Error: object 'wage' not found
+## Error: object 'g1' not found
 ```
 
 ```r
@@ -1345,7 +1386,7 @@ E(g1)[6]$color <- colors[999 - as.integer(200 * wage["arrestDate", 1])]
 ```
 
 ```
-## Error: object 'wage' not found
+## Error: object 'g1' not found
 ```
 
 ```r
@@ -1353,7 +1394,7 @@ E(g1)[7]$color <- colors[999 - as.integer(200 * wage["arrestTime", 1])]
 ```
 
 ```
-## Error: object 'wage' not found
+## Error: object 'g1' not found
 ```
 
 ```r
@@ -1363,7 +1404,7 @@ E(g1)[8]$color <- colors[999 - as.integer(200 * wsex["race", 1])]
 ```
 
 ```
-## Error: object 'wsex' not found
+## Error: object 'g1' not found
 ```
 
 ```r
@@ -1371,7 +1412,7 @@ E(g1)[9]$color <- colors[999 - as.integer(200 * wsex["incidentLocation", 1])]
 ```
 
 ```
-## Error: object 'wsex' not found
+## Error: object 'g1' not found
 ```
 
 ```r
@@ -1379,7 +1420,7 @@ E(g1)[10]$color <- colors[999 - as.integer(200 * wsex["district", 1])]
 ```
 
 ```
-## Error: object 'wsex' not found
+## Error: object 'g1' not found
 ```
 
 ```r
@@ -1387,7 +1428,7 @@ E(g1)[11]$color <- colors[999 - as.integer(200 * wsex["neighborhood", 1])]
 ```
 
 ```
-## Error: object 'wsex' not found
+## Error: object 'g1' not found
 ```
 
 ```r
@@ -1395,7 +1436,7 @@ E(g1)[12]$color <- colors[999 - as.integer(200 * wsex["arrestDate", 1])]
 ```
 
 ```
-## Error: object 'wsex' not found
+## Error: object 'g1' not found
 ```
 
 ```r
@@ -1403,7 +1444,7 @@ E(g1)[13]$color <- colors[999 - as.integer(200 * wsex["arrestTime", 1])]
 ```
 
 ```
-## Error: object 'wsex' not found
+## Error: object 'g1' not found
 ```
 
 ```r
@@ -1413,7 +1454,7 @@ E(g1)[14]$color <- colors[999 - as.integer(200 * wrace["incidentLocation", 1])]
 ```
 
 ```
-## Error: object 'wrace' not found
+## Error: object 'g1' not found
 ```
 
 ```r
@@ -1421,7 +1462,7 @@ E(g1)[15]$color <- colors[999 - as.integer(200 * wrace["district", 1])]
 ```
 
 ```
-## Error: object 'wrace' not found
+## Error: object 'g1' not found
 ```
 
 ```r
@@ -1429,7 +1470,7 @@ E(g1)[16]$color <- colors[999 - as.integer(200 * wrace["neighborhood", 1])]
 ```
 
 ```
-## Error: object 'wrace' not found
+## Error: object 'g1' not found
 ```
 
 ```r
@@ -1437,7 +1478,7 @@ E(g1)[17]$color <- colors[999 - as.integer(200 * wrace["arrestDate", 1])]
 ```
 
 ```
-## Error: object 'wrace' not found
+## Error: object 'g1' not found
 ```
 
 ```r
@@ -1445,7 +1486,7 @@ E(g1)[18]$color <- colors[999 - as.integer(200 * wrace["arrestTime", 1])]
 ```
 
 ```
-## Error: object 'wrace' not found
+## Error: object 'g1' not found
 ```
 
 ```r
@@ -1455,7 +1496,7 @@ E(g1)[19]$color <- colors[999 - as.integer(200 * wincidentLocation["district",
 ```
 
 ```
-## Error: object 'wincidentLocation' not found
+## Error: object 'g1' not found
 ```
 
 ```r
@@ -1464,7 +1505,7 @@ E(g1)[20]$color <- colors[999 - as.integer(200 * wincidentLocation["neighborhood
 ```
 
 ```
-## Error: object 'wincidentLocation' not found
+## Error: object 'g1' not found
 ```
 
 ```r
@@ -1473,7 +1514,7 @@ E(g1)[21]$color <- colors[999 - as.integer(200 * wincidentLocation["arrestDate",
 ```
 
 ```
-## Error: object 'wincidentLocation' not found
+## Error: object 'g1' not found
 ```
 
 ```r
@@ -1482,7 +1523,7 @@ E(g1)[22]$color <- colors[999 - as.integer(200 * wincidentLocation["arrestTime",
 ```
 
 ```
-## Error: object 'wincidentLocation' not found
+## Error: object 'g1' not found
 ```
 
 ```r
@@ -1491,7 +1532,7 @@ E(g1)[23]$color <- colors[999 - as.integer(200 * wdistrict["neighborhood", 1])]
 ```
 
 ```
-## Error: object 'wdistrict' not found
+## Error: object 'g1' not found
 ```
 
 ```r
@@ -1499,7 +1540,7 @@ E(g1)[24]$color <- colors[999 - as.integer(200 * wdistrict["arrestDate", 1])]
 ```
 
 ```
-## Error: object 'wdistrict' not found
+## Error: object 'g1' not found
 ```
 
 ```r
@@ -1507,7 +1548,7 @@ E(g1)[25]$color <- colors[999 - as.integer(200 * wdistrict["arrestTime", 1])]
 ```
 
 ```
-## Error: object 'wdistrict' not found
+## Error: object 'g1' not found
 ```
 
 ```r
@@ -1517,7 +1558,7 @@ E(g1)[26]$color <- colors[999 - as.integer(200 * wneighborhood["arrestDate",
 ```
 
 ```
-## Error: object 'wneighborhood' not found
+## Error: object 'g1' not found
 ```
 
 ```r
@@ -1526,7 +1567,7 @@ E(g1)[27]$color <- colors[999 - as.integer(200 * wneighborhood["arrestTime",
 ```
 
 ```
-## Error: object 'wneighborhood' not found
+## Error: object 'g1' not found
 ```
 
 ```r
@@ -1535,7 +1576,7 @@ E(g1)[28]$color <- colors[999 - as.integer(200 * warrestDate["arrestTime", 1])]
 ```
 
 ```
-## Error: object 'warrestDate' not found
+## Error: object 'g1' not found
 ```
 
 ```r
@@ -1543,21 +1584,37 @@ E(g1)[28]$color <- colors[999 - as.integer(200 * warrestDate["arrestTime", 1])]
 plot(g1)
 ```
 
-![plot of chunk Bharat and Michael](figure/Bharat_and_Michael1.png) 
+```
+## Error: object 'g1' not found
+```
 
 ```r
 
 # 1 - Age 2 - Sex 3 - Race 4 - Date 5 - Time
 g2 <- graph(c(1, 2, 1, 3, 1, 4, 1, 5, 2, 3, 2, 4, 2, 5, 3, 4, 3, 5, 4, 5), directed = FALSE)
+```
+
+```
+## Error: could not find function "graph"
+```
+
+```r
 
 V(g2)$label <- c("Age", "Sex", "Race", "ArrestDate", "ArrestTime")
+```
+
+```
+## Error: object 'g2' not found
+```
+
+```r
 
 # set colors for Age node
 E(g2)[1]$color <- colors[999 - as.integer(60000 * wage["sex", 1])]
 ```
 
 ```
-## Error: object 'wage' not found
+## Error: object 'g2' not found
 ```
 
 ```r
@@ -1565,7 +1622,7 @@ E(g2)[2]$color <- colors[999 - as.integer(60000 * wage["race", 1])]
 ```
 
 ```
-## Error: object 'wage' not found
+## Error: object 'g2' not found
 ```
 
 ```r
@@ -1573,7 +1630,7 @@ E(g2)[3]$color <- colors[999 - as.integer(60000 * wage["arrestDate", 1])]
 ```
 
 ```
-## Error: object 'wage' not found
+## Error: object 'g2' not found
 ```
 
 ```r
@@ -1581,7 +1638,7 @@ E(g2)[4]$color <- colors[999 - as.integer(60000 * wage["arrestTime", 1])]
 ```
 
 ```
-## Error: object 'wage' not found
+## Error: object 'g2' not found
 ```
 
 ```r
@@ -1591,7 +1648,7 @@ E(g2)[5]$color <- colors[999 - as.integer(60000 * wage["race", 1])]
 ```
 
 ```
-## Error: object 'wage' not found
+## Error: object 'g2' not found
 ```
 
 ```r
@@ -1599,7 +1656,7 @@ E(g2)[6]$color <- colors[999 - as.integer(60000 * wage["arrestDate", 1])]
 ```
 
 ```
-## Error: object 'wage' not found
+## Error: object 'g2' not found
 ```
 
 ```r
@@ -1607,7 +1664,7 @@ E(g2)[7]$color <- colors[999 - as.integer(60000 * wage["arrestTime", 1])]
 ```
 
 ```
-## Error: object 'wage' not found
+## Error: object 'g2' not found
 ```
 
 ```r
@@ -1617,7 +1674,7 @@ E(g2)[8]$color <- colors[999 - as.integer(60000 * wage["arrestDate", 1])]
 ```
 
 ```
-## Error: object 'wage' not found
+## Error: object 'g2' not found
 ```
 
 ```r
@@ -1625,7 +1682,7 @@ E(g2)[9]$color <- colors[999 - as.integer(60000 * wage["arrestTime", 1])]
 ```
 
 ```
-## Error: object 'wage' not found
+## Error: object 'g2' not found
 ```
 
 ```r
@@ -1635,7 +1692,7 @@ E(g2)[9]$color <- colors[999 - as.integer(60000 * wage["arrestTime", 1])]
 ```
 
 ```
-## Error: object 'wage' not found
+## Error: object 'g2' not found
 ```
 
 ```r
@@ -1643,7 +1700,9 @@ E(g2)[9]$color <- colors[999 - as.integer(60000 * wage["arrestTime", 1])]
 plot(g2)
 ```
 
-![plot of chunk Bharat and Michael](figure/Bharat_and_Michael2.png) 
+```
+## Error: object 'g2' not found
+```
 
 
 What did you observe?
