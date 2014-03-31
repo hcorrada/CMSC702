@@ -665,6 +665,7 @@ library(sqldf)
 ```
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 ## Loading required package: gsubfn
 ## Loading required package: proto
@@ -675,6 +676,22 @@ library(sqldf)
 ## Loading required package: proto
 ## Loading required namespace: tcltk
 >>>>>>> 0e04f064bb355d87894fd2913c6d15a069b0daf6
+=======
+## Warning: package 'sqldf' was built under R version 3.0.3
+```
+
+```
+## Loading required package: gsubfn
+```
+
+```
+## Warning: package 'gsubfn' was built under R version 3.0.3
+```
+
+```
+## Loading required package: proto
+## Loading required namespace: tcltk
+>>>>>>> bee871cb4c4a818b1907e7e4ede2b8f10a7412af
 ## Loading required package: RSQLite
 ## Loading required package: DBI
 ## Loading required package: RSQLite.extfuns
@@ -698,6 +715,7 @@ barplot(a$cnt, horiz = TRUE, cex.names = 0.7, names.arg = a$incidentOffense)
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 ![plot of chunk imoldcat](figure/imoldcat.png) 
 =======
 ![plot of chunk imoldcat](figure/imoldcat1.png) 
@@ -705,6 +723,9 @@ barplot(a$cnt, horiz = TRUE, cex.names = 0.7, names.arg = a$incidentOffense)
 =======
 ![plot of chunk imoldcat](figure/imoldcat1.png) 
 >>>>>>> 0e04f064bb355d87894fd2913c6d15a069b0daf6
+=======
+![plot of chunk imoldcat](figure/imoldcat1.png) 
+>>>>>>> bee871cb4c4a818b1907e7e4ede2b8f10a7412af
 
 ```r
 
@@ -718,6 +739,13 @@ library(vcd)
 ```
 
 ```
+<<<<<<< HEAD
+=======
+## Warning: package 'vcd' was built under R version 3.0.3
+```
+
+```
+>>>>>>> bee871cb4c4a818b1907e7e4ede2b8f10a7412af
 ## Loading required package: grid
 ```
 
@@ -962,6 +990,16 @@ vacant_tab$lat = as.numeric(sapply(tmp, function(x) x[1]))
 # Plot the geographical distribution of vacant buildings vs. arrests
 library(ggplot2)
 library(ggmap)
+<<<<<<< HEAD
+=======
+```
+
+```
+## Warning: package 'ggmap' was built under R version 3.0.3
+```
+
+```r
+>>>>>>> bee871cb4c4a818b1907e7e4ede2b8f10a7412af
 
 # Function to plot datapoints using GoogleMaps API
 plot_map <- function(map, dataPoints, dataPoints2) {
@@ -1269,6 +1307,7 @@ What did you observe?
 =======
 Here I am making a big assumption that people tend to get arrested in the same neighborhood in which they live.  Therefore the results may not apply as well in a neighborhood like "Downtown" where more people commute to the neighborhood than live there.  For about half of the listed neighborhoods, black arrests are higher than mere population demographics would predict and white arrests are lower. This could be due to a variety of factors, not least of which is potential racism among the police force.  The other half follow the expected results very well, and Cherry Hill even reverses the finding.  Therefore I conclude that race of arrest is at leasty partially influenced by factors other than from population demographics.
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 ---
 <<<<<<< HEAD
@@ -1915,3 +1954,82 @@ What did you observe?:
     In the two charts, the criminal types which are mainly committed by males/females are listed. The blue/red parts stand for the percentage of cases committed by males/females.
     There's a difference between the major types of criminals for males and females. Although males take a larger percentage in most of the criminal types, most of the major types are still kind of voilent. The characteristics of criminal types for females are more related to sex, children and disabilites.
 >>>>>>> 2574bd065679b3b24b0d520209815fbcdab1d612
+=======
+
+---
+### Hao Li
+What question are you asking?: 
+
+Q1: I heared the area around the Johns Hopkins University is not safe. Is that true?
+Q1: Where is the best place to live around JHU?
+  
+What is the code you use to answer it?:
+
+
+```r
+library(ggplot2)
+library(ggmap)
+
+# Function to plot datapoints using GoogleMaps API
+plot_map <- function(center, square) {
+    map = ggmap(get_map(location = center, zoom = 14, maptype = "roadmap"))
+    map = map + geom_point(data = arrest_tab, aes(x = lon, y = lat), color = "red", 
+        alpha = 0.1, size = 2)
+    map = map + geom_rect(aes(xmin = square[1], xmax = square[2], ymin = square[3], 
+        ymax = square[4]), color = "yellow", alpha = 0.05)
+    map
+}
+
+# JHU Homewood campus
+center = c(lon = -76.620644, lat = 39.329522)
+square = c(-76.624283, -76.617685, 39.324571, 39.335874)  # bounding box of the campus
+map = plot_map(center, square)
+```
+
+```
+## Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=39.329522,-76.620644&zoom=14&size=%20640x640&scale=%202&maptype=roadmap&sensor=false
+## Google Maps API Terms of Service : http://developers.google.com/maps/terms
+```
+
+```r
+map = map + geom_leg(aes(x = -76.609546, y = 39.339051, xend = -76.609504, yend = 39.315514), 
+    colour = "blue", alpha = 0.1, size = 2)
+map
+```
+
+```
+## Warning: Removed 96502 rows containing missing values (geom_point).
+```
+
+![plot of chunk unnamed-chunk-13](figure/unnamed-chunk-131.png) 
+
+```r
+
+# JHU School of Medicine
+center = c(lon = -76.588595, lat = 39.298584)
+square = c(-76.59735, -76.58793, 39.293952, 39.300777)  # bounding box of the campus
+map = plot_map(center, square)
+```
+
+```
+## Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=39.298584,-76.588595&zoom=14&size=%20640x640&scale=%202&maptype=roadmap&sensor=false
+## Google Maps API Terms of Service : http://developers.google.com/maps/terms
+```
+
+```r
+map
+```
+
+```
+## Warning: Removed 88292 rows containing missing values (geom_point).
+```
+
+![plot of chunk unnamed-chunk-13](figure/unnamed-chunk-132.png) 
+
+
+What did you observe?:
+
+1. The area around the Homewood campus(main campus) of JHU is relatively safe comparing to the campus of JHU School of Medicine locates, which locates in downtown and has higher crime density.
+
+2. It is interesting to see that there is clear contrast between the west and the east of Greenmount Road(blue line) near the Homewood campus and there are quite few crimes in the north of the campus, which could be a safe neighborhood to live. If you attend the school of medicine, it's better to live elsewhere and take the shuttle:)
+>>>>>>> bee871cb4c4a818b1907e7e4ede2b8f10a7412af

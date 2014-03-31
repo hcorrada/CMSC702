@@ -1080,3 +1080,44 @@ What did you observe?:
 =======
     In the two charts, the criminal types which are mainly committed by males/females are listed. The blue/red parts stand for the percentage of cases committed by males/females.
     There's a difference between the major types of criminals for males and females. Although males take a larger percentage in most of the criminal types, most of the major types are still kind of voilent. The characteristics of criminal types for females are more related to sex, children and disabilites.
+
+---
+### Hao Li
+What question are you asking?: 
+
+Q1: I heared the area around the Johns Hopkins University is not safe. Is that true?
+Q1: Where is the best place to live around JHU?
+  
+What is the code you use to answer it?:
+
+```{r}
+library(ggplot2)
+library(ggmap)
+
+# Function to plot datapoints using GoogleMaps API
+plot_map <- function(center, square) {
+  map = ggmap(get_map(location=center, zoom=14, maptype="roadmap"))
+  map = map + geom_point(data=arrest_tab, aes(x=lon, y=lat), color="red", alpha=0.1, size=2)
+  map = map + geom_rect(aes(xmin=square[1], xmax=square[2], ymin=square[3], ymax=square[4]), color="yellow", alpha=0.05)  
+  map
+}
+
+# JHU Homewood campus
+center = c(lon = -76.620644, lat = 39.329522)
+square = c(-76.624283, -76.617685, 39.324571, 39.335874) # bounding box of the campus
+map = plot_map(center,square)
+map = map + geom_leg(aes(x=-76.609546, y=39.339051, xend=-76.609504, yend=39.315514), colour="blue", alpha=0.1, size=2)
+map
+
+# JHU School of Medicine
+center = c(lon = -76.588595, lat = 39.298584)
+square = c(-76.597350, -76.587930, 39.293952, 39.300777) # bounding box of the campus
+map = plot_map(center,square)
+map
+```
+
+What did you observe?:
+
+1. The area around the Homewood campus(main campus) of JHU is relatively safe comparing to the campus of JHU School of Medicine locates, which locates in downtown and has higher crime density.
+
+2. It is interesting to see that there is clear contrast between the west and the east of Greenmount Road(blue line) near the Homewood campus and there are quite few crimes in the north of the campus, which could be a safe neighborhood to live. If you attend the school of medicine, it's better to live elsewhere and take the shuttle:)
