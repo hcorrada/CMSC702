@@ -1269,6 +1269,7 @@ What did you observe?
 =======
 Here I am making a big assumption that people tend to get arrested in the same neighborhood in which they live.  Therefore the results may not apply as well in a neighborhood like "Downtown" where more people commute to the neighborhood than live there.  For about half of the listed neighborhoods, black arrests are higher than mere population demographics would predict and white arrests are lower. This could be due to a variety of factors, not least of which is potential racism among the police force.  The other half follow the expected results very well, and Cherry Hill even reverses the finding.  Therefore I conclude that race of arrest is at leasty partially influenced by factors other than from population demographics.
 
+<<<<<<< HEAD
 ---
 <<<<<<< HEAD
 ### Bharat and Michael
@@ -1711,10 +1712,20 @@ We observed a strong relationship between atrributes pertaining to location and 
 What question are you asking?:
 
     Which types of arrested crimes can benefit from CCTV cameras? Is there any relationship between the number of CCTV cameras and the number of arrests on specific incident offense? In addition, what is the difference of the performance on sex?
+=======
+
+---
+
+#### Zebao Gao
+What question are you asking?:
+
+    What are the major types of criminals for males/females in comparison?
+>>>>>>> 2574bd065679b3b24b0d520209815fbcdab1d612
 
 What is the code you use to answer it?:
 
 ```r
+<<<<<<< HEAD
 
 narcotics <- c("87-Narcotics", "87O-Narcotics (Outside)", "97-Search & Seizure")
 violent <- c("1A-Murder", "2A-Rape (Force)", "2B-Rape (Attempt)", "3AF-Robb Hwy-Firearm", 
@@ -1856,3 +1867,51 @@ What I observed: Overall, more than half of the arrests happen between 10AM and 
 There is no siginificant difference between arrest time in different neighborhoods,
 although arrests happen slightly earlier in central and the southern areas compared to northern areas.
 >>>>>>> 0e04f064bb355d87894fd2913c6d15a069b0daf6
+=======
+# get arrest data related to sex and incidenOffense, and remove unknown
+# offense types
+arrest_data <- subset(arrest_tab, select = c(sex, incidentOffense))
+arrest_data <- subset(arrest_data, !(incidentOffense %in% c("79-Other", "Unknown Offense")))
+# calculate frequence of criminals by males or females for each criminal
+# type
+arrest_table <- table(arrest_data$incidentOffense, arrest_data$sex)
+arrest_frame <- as.data.frame.table(arrest_table)
+arrest_frame_m <- subset(arrest_frame, arrest_frame$Var2 == "M")
+arrest_frame_f <- subset(arrest_frame, arrest_frame$Var2 == "F")
+arrest_frame_all <- data.frame(incidentOffense = arrest_frame_m$Var1, M = arrest_frame_m$Freq, 
+    F = arrest_frame_f$Freq)
+# remove criminal types occured for very few times
+arrest_frame_all <- subset(arrest_frame_all, arrest_frame_all$M > 2 & arrest_frame_all$F > 
+    2)
+arrest_frame_all$MRatio = 100 * arrest_frame_all$M/(arrest_frame_all$M + arrest_frame_all$F)
+arrest_frame_all$FRatio = 100 * arrest_frame_all$F/(arrest_frame_all$M + arrest_frame_all$F)
+# remove unusable data
+rm(arrest_table, arrest_frame, arrest_frame_m, arrest_frame_f)
+arrest_frame_all <- arrest_frame_all[order(arrest_frame_all$MRatio), ]
+par(las = 2, mar = c(4, 9, 3, 2) + 0.1)
+barplot(t(as.matrix(arrest_frame_all[arrest_frame_all$MRatio > 87, 4:5])), horiz = TRUE, 
+    col = c("blue", "red"), cex.names = 0.7, main = "Major Criminal Types for Males", 
+    names.arg = arrest_frame_all$incidentOffense[arrest_frame_all$MRatio > 87])
+```
+
+![plot of chunk Zebao_Gao](figure/Zebao_Gao1.png) 
+
+```r
+arrest_frame_all <- arrest_frame_all[order(arrest_frame_all$FRatio), ]
+barplot(t(as.matrix(arrest_frame_all[arrest_frame_all$FRatio > 20, 5:4])), horiz = TRUE, 
+    col = c("red", "blue"), cex.names = 0.7, main = "Major Criminal for Females", 
+    names.arg = arrest_frame_all$incidentOffense[arrest_frame_all$FRatio > 20])
+```
+
+![plot of chunk Zebao_Gao](figure/Zebao_Gao2.png) 
+
+```r
+rm(arrest_frame_all)
+```
+
+
+What did you observe?:
+=======
+    In the two charts, the criminal types which are mainly committed by males/females are listed. The blue/red parts stand for the percentage of cases committed by males/females.
+    There's a difference between the major types of criminals for males and females. Although males take a larger percentage in most of the criminal types, most of the major types are still kind of voilent. The characteristics of criminal types for females are more related to sex, children and disabilites.
+>>>>>>> 2574bd065679b3b24b0d520209815fbcdab1d612
