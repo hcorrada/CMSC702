@@ -1003,3 +1003,43 @@ What did you observe?:
     Furthermore, I tested on the certain offenses, "4E-Common Assault". The relationship is more obvious. 
     
     So using this function, we can know the which types of crimes would benefit from CCTV caremas.
+---
+#### Phil Nguyen
+
+Question: What is the distribution of arrest time for each neighborhood?
+
+Code I use:
+```{r philnguyen}
+# convert arrest time to numeric, e.g. 11:45 -> 11.75
+time.to.num <- function(s) {
+  x <- as.numeric(gsub(":", "", s))
+  (x %/% 100) + (x%%100)/60
+}
+
+# abbreviate district names
+abbrev <- function(s) {
+  gsub("CENTRAL", "C",
+  gsub("EASTERN", "E",
+  gsub("WESTERN", "W",
+  gsub("NORTHERN", "N",
+  gsub("NORTHWESTERN", "NW",
+  gsub("SOUTHEASTERN", "SE",
+  gsub("SOUTHERN", "S",
+  gsub("SOUTHWESTERN", "SW",
+  gsub("NORTHEASTERN", "NE", s)))))))))
+}
+
+# filter out empty districts
+dat <- arrest_tab[arrest_tab$district != "",]
+
+plot(time.to.num(dat$arrestTime) ~ factor(abbrev(dat$district)),
+     xlab="Neighborhood", ylab="Arrest Time")
+
+# earliest and latest arrest time median
+median(time.to.num(dat$arrestTime[dat$district == "NORTHWESTERN"]))
+median(time.to.num(dat$arrestTime[dat$district == "CENTRAL"]))
+```
+
+What I observed: Overall, more than half of the arrests happen between 10AM and 8PM.
+There is no siginificant difference between arrest time in different neighborhoods,
+although arrests happen slightly earlier in central and the southern areas compared to northern areas.
